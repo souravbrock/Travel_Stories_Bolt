@@ -34,7 +34,11 @@ Without these, the app renders a setup notice instead of crashing
 Schema + seed data live in `supabase/migrations/`:
 
 - `create_travel_stories_schema` — states, districts, tourist_spots, accommodations
-- `seed_travel_data` — 5 states (Kerala, Rajasthan, Goa, Himachal, Tamil Nadu)
+- `seed_travel_data` — first 5 states (Kerala, Rajasthan, Goa, Himachal, Tamil Nadu)
+- `fix_map_data_mismatches` — renames seeded districts to match map data
+  (`Pushkar`→`Ajmer`, `Kanniyakumari`→`Kanyakumari`)
+- `seed_remaining_states` — remaining 31 states/UTs (114 spots, 28 stays);
+  district names match TopoJSON `district` properties exactly
 - `create_agent_marketplace_schema` — travel_agents, travel_packages
 - `seed_agent_marketplace_data` — 4 agents, 10 packages
 
@@ -57,6 +61,16 @@ All tables are public-read (anon SELECT) via RLS; writes happen via migrations o
 - `src/lib/data.ts` — Supabase queries + haversine distance helpers
 - `src/lib/mapData.ts` — TopoJSON CDN URLs (udit-001/india-maps-data)
 - `src/lib/supabase.ts` — lazy client, `isSupabaseConfigured` guard
+
+## Map data
+
+State/district geometry comes from `udit-001/india-maps-data` via jsDelivr
+(see `src/lib/mapData.ts`). Notes:
+
+- All 36 states/UTs in `india.json` are mapped; Tamil Nadu's file is
+  `tamilnadu.json` (no hyphen).
+- `StateMap` centers every state (`getCenter`) and zooms small states/UTs
+  (`getScale`, e.g. Chandigarh 30000, Delhi 12000).
 
 ## Pending / known gaps
 

@@ -28,7 +28,7 @@ const STATE_SLUG_MAP: Record<string, string> = {
   Punjab: "punjab",
   Rajasthan: "rajasthan",
   Sikkim: "sikkim",
-  "Tamil Nadu": "tamil-nadu",
+  "Tamil Nadu": "tamilnadu",
   Telangana: "telangana",
   Tripura: "tripura",
   Uttarakhand: "uttarakhand",

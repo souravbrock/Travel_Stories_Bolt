@@ -145,7 +145,7 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
         <div className="rounded-2xl bg-gradient-to-br from-sand-50 to-primary-50 p-4 shadow-sm ring-1 ring-sand-200">
           <ComposableMap
             projection="geoMercator"
-            projectionConfig={{ scale: 2500, center: getCenter(state.name) }}
+            projectionConfig={{ scale: getScale(state.name), center: getCenter(state.name) }}
             style={{ width: "100%", height: "auto" }}
           >
             <Geographies geography={topoUrl}>
@@ -377,6 +377,54 @@ function getCenter(stateName: string): [number, number] {
     Goa: [74.0, 15.3],
     "Himachal Pradesh": [77.5, 31.5],
     "Tamil Nadu": [78.5, 11.0],
+    "Andhra Pradesh": [80.0, 15.9],
+    "Arunachal Pradesh": [94.5, 28.0],
+    Assam: [92.5, 26.2],
+    Bihar: [85.5, 25.8],
+    Chhattisgarh: [81.8, 21.0],
+    Gujarat: [71.5, 22.5],
+    Haryana: [76.5, 29.2],
+    Jharkhand: [85.5, 23.8],
+    Karnataka: [76.5, 14.5],
+    "Madhya Pradesh": [78.0, 23.5],
+    Maharashtra: [76.5, 19.5],
+    Manipur: [93.9, 24.5],
+    Meghalaya: [91.5, 25.5],
+    Mizoram: [92.8, 23.3],
+    Nagaland: [94.3, 26.0],
+    Odisha: [84.5, 20.5],
+    Punjab: [75.3, 31.0],
+    Sikkim: [88.4, 27.5],
+    Telangana: [79.0, 18.0],
+    Tripura: [91.5, 23.8],
+    "Uttar Pradesh": [80.5, 27.0],
+    Uttarakhand: [79.5, 30.0],
+    "West Bengal": [87.5, 23.5],
+    "Andaman and Nicobar Islands": [92.9, 12.0],
+    Chandigarh: [76.78, 30.74],
+    "Dadra and Nagar Haveli and Daman and Diu": [73.0, 20.4],
+    Delhi: [77.2, 28.6],
+    "Jammu and Kashmir": [75.0, 33.8],
+    Ladakh: [77.8, 34.2],
+    Lakshadweep: [72.5, 10.5],
+    Puducherry: [79.83, 11.93],
   };
   return centers[stateName] ?? [78.96, 22.5];
+}
+
+// Small states/UTs need a larger zoom or they render as a dot at the
+// default scale. Values tuned so each state fills the map panel.
+function getScale(stateName: string): number {
+  const scales: Record<string, number> = {
+    Chandigarh: 30000,
+    Delhi: 12000,
+    Puducherry: 9000,
+    "Dadra and Nagar Haveli and Daman and Diu": 9000,
+    Lakshadweep: 6000,
+    Goa: 6000,
+    Sikkim: 6000,
+    Tripura: 6000,
+    "Andaman and Nicobar Islands": 1500,
+  };
+  return scales[stateName] ?? 2500;
 }
