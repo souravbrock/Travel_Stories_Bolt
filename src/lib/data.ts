@@ -50,12 +50,6 @@ export async function fetchSpotsByState(
   return (data ?? []) as unknown as TouristSpot[];
 }
 
-export async function fetchAllSpotsForState(
-  stateId: number,
-): Promise<TouristSpot[]> {
-  return fetchSpotsByState(stateId);
-}
-
 export async function fetchAccommodations(
   spotId: number,
 ): Promise<Accommodation[]> {

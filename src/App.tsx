@@ -51,6 +51,13 @@ function App() {
           allSpots,
           parentState: view.state,
         });
+      } else if (view.level === "spot") {
+        setView({
+          level: "spot",
+          spot,
+          allSpots,
+          parentState: view.parentState,
+        });
       }
     },
     [view],
