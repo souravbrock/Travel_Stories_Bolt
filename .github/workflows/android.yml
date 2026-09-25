@@ -25,8 +25,9 @@ jobs:
 
       - name: Setup Android SDK
         run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          SDMAN="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDMAN" --licenses > /dev/null
+          "$SDMAN" "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
       - uses: actions/setup-node@v4
         with:
