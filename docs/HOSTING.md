@@ -29,11 +29,17 @@ public_html/trvlstory.reddevils.co.in/.htaccess (from deploy/htaccess)
 ## Deploy / update
 
 Push to `feat/all-india-states` (or `main`) and the GitHub Actions workflow
-`Deploy to cPanel` builds and uploads automatically. One-time setup: add
-repository secrets `CPANEL_SSH_KEY` (private key), `CPANEL_HOST`,
-`CPANEL_USER`, `CPANEL_DOCROOT` (see `.github/workflows/deploy-cpanel.yml`).
+`Deploy to cPanel` builds and uploads over FTPS automatically. One-time setup:
 
-Manual fallback (same steps the workflow runs):
+1. cPanel → **FTP Accounts** → Add FTP Account: login `trvldeploy`,
+   strong password (save it), directory
+   `public_html/trvlstory.reddevils.co.in`, quota Unlimited → Create.
+   Full login becomes `trvldeploy@reddevils.co.in`.
+2. Repo **Settings → Secrets and variables → Actions**: `FTP_HOST`
+   (`kaveri.domainadda.com`), `FTP_USERNAME`
+   (`trvldeploy@reddevils.co.in`), `FTP_PASSWORD`.
+
+Manual fallback (same files, over SSH):
 
 ```bash
 npm run build

@@ -1,11 +1,12 @@
-# Deploys the production build + PHP API to cPanel over SSH on every push.
-# Uses plain scp (rsync is NOT available on shared cPanel hosting).
+# Deploys the production build + PHP API to cPanel over FTPS on every push.
+# (SSH/rsync deploys are not possible: rsync is missing on shared hosting
+# and the GitHub runner cannot use the SSH key. FTPS it is.)
 # Required repository secrets (Settings -> Secrets and variables -> Actions):
-#   CPANEL_SSH_KEY  private key matching the server's authorized_keys
-#                   (contents of ~/.ssh/cpanel-deploy)
-#   CPANEL_HOST     kaveri.domainadda.com
-#   CPANEL_USER     reddevil
-#   CPANEL_DOCROOT  /home/reddevil/public_html/trvlstory.reddevils.co.in
+#   FTP_HOST      kaveri.domainadda.com
+#   FTP_USERNAME  trvldeploy@reddevils.co.in (FTP account scoped to the docroot)
+#   FTP_PASSWORD  the FTP account password
+# The FTP account itself is created once in cPanel -> FTP Accounts
+# (login trvldeploy, directory public_html/trvlstory.reddevils.co.in).
 
 name: Deploy to cPanel
 
@@ -28,34 +29,29 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Upload over SSH (scp)
-        env:
-          SSH_KEY: ${{ secrets.CPANEL_SSH_KEY }}
-          SSH_HOST: ${{ secrets.CPANEL_HOST }}
-          SSH_USER: ${{ secrets.CPANEL_USER }}
-          DOCROOT: ${{ secrets.CPANEL_DOCROOT }}
+      - name: Assemble release
         run: |
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s' "$SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          cat >> ~/.ssh/config <<EOF
-          Host cpanel
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/deploy_key
-            StrictHostKeyChecking accept-new
-          EOF
-          scp -r dist/index.html dist/assets dist/favicon.svg dist/logo.svg "cpanel:$DOCROOT/"
-          scp api/*.php "cpanel:$DOCROOT/api/"
-          scp deploy/htaccess "cpanel:$DOCROOT/.htaccess"
+          rm -rf release && mkdir -p release/api
+          cp -r dist/* release/
+          cp api/*.php release/api/
+          cp deploy/htaccess release/.htaccess
+          ls -la release release/api | head -20
 
-      - name: Fix permissions and verify
-        uses: appleboy/ssh-action@v1
+      - name: Upload via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.CPANEL_HOST }}
-          username: ${{ secrets.CPANEL_USER }}
-          key: ${{ secrets.CPANEL_SSH_KEY }}
-          script: |
-            chmod 755 ${{ secrets.CPANEL_DOCROOT }}/assets
-            chmod 644 ${{ secrets.CPANEL_DOCROOT }}/assets/*
-            curl -sf https://trvlstory.reddevils.co.in/api/health.php
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./release/
+          server-dir: ./
+          dangerous-clean-slate: false
+          log-level: standard
+
+      - name: Verify live API
+        run: |
+          sleep 10
+          curl -sf https://trvlstory.reddevils.co.in/api/health.php
+          curl -sf -o /dev/null https://trvlstory.reddevils.co.in/
