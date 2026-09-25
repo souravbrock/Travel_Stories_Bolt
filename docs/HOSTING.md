@@ -5,26 +5,26 @@ Node process on the server. The subdomain docroot serves `dist/*` and
 `/api/*.php` from one origin, so the frontend needs no API keys.
 
 ```
-trvlstory.reddevils.co.in/      <- dist/* (index.html, assets, favicon)
-trvlstory.reddevils.co.in/api/  <- api/*.php
-trvlstory.reddevils.co.in/.htaccess (from deploy/htaccess)
+public_html/trvlstory.reddevils.co.in/  <- dist/* (index.html, assets, favicon)
+public_html/trvlstory.reddevils.co.in/api/  <- api/*.php
+public_html/trvlstory.reddevils.co.in/.htaccess (from deploy/htaccess)
 /home/reddevil/trvlstory-config/config.php  <- DB credentials (OUTSIDE docroot)
 ```
 
-## One-time setup (cPanel UI)
+## One-time setup (done 2026-09-25 via SSH + uapi)
 
-1. **Subdomain**: Domains → Create a New Domain →
-   `trvlstory.reddevils.co.in`, document root
-   `/home/reddevil/trvlstory.reddevils.co.in`. AutoSSL covers it (SSL is
-   active on this account).
-2. **Database**: Database Wizard → database `reddevil_trvlstory` → user
-   `reddevil_trvluser` (strong password) → grant ALL PRIVILEGES.
-3. **Schema + data**: phpMyAdmin → select `reddevil_trvlstory` → Import →
-   `database/schema.mysql.sql`, then Import → `database/seed.sql`.
+1. **Subdomain**: `uapi SubDomain addsubdomain domain=trvlstory
+   rootdomain=reddevils.co.in` → docroot
+   `/home/reddevil/public_html/trvlstory.reddevils.co.in`. AutoSSL covered
+   it the same day. (cPanel UI alternative: Domains → Create a New Domain.)
+2. **Database**: `uapi Mysql create_database name=reddevil_trvlstory`,
+   `create_user name=reddevil_trvluser`, `set_privileges_on_database ...
+   privileges='ALL PRIVILEGES'`. (UI alternative: Database Wizard.)
+3. **Schema + data**: imported `database/schema.mysql.sql` then
+   `database/seed.sql` via `mysql` CLI (UI alternative: phpMyAdmin Import).
    Expect: 36 states, 92 districts, 154 spots, 75 stays, 4 agents, 10 packages.
-4. **Config**: File Manager (or SSH) → create
-   `/home/reddevil/trvlstory-config/` → upload `config/config.sample.php`
-   as `config.php` → fill in db host/name/user/pass → permissions 600.
+4. **Config**: `/home/reddevil/trvlstory-config/config.php` (mode 600) with
+   the db credentials.
 
 ## Deploy / update
 
