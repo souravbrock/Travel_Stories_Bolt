@@ -15,6 +15,25 @@ interface Props {
   onSelectState: (state: State) => void;
 }
 
+// States on the eastern side of the map: the floating panel docks left
+// for these so it never covers the state being hovered.
+const EASTERN_STATES = new Set([
+  "West Bengal",
+  "Odisha",
+  "Bihar",
+  "Jharkhand",
+  "Chhattisgarh",
+  "Assam",
+  "Arunachal Pradesh",
+  "Nagaland",
+  "Manipur",
+  "Mizoram",
+  "Tripura",
+  "Meghalaya",
+  "Sikkim",
+  "Andaman and Nicobar Islands",
+]);
+
 export function IndiaMap({ states, onSelectState }: Props) {
   const [hoveredName, setHoveredName] = useState<string | null>(null);
 
@@ -26,6 +45,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
 
   const hoveredState = hoveredName ? stateMap.get(hoveredName) ?? null : null;
   const hasData = (name: string) => stateMap.has(name);
+  const dockLeft = hoveredState ? EASTERN_STATES.has(hoveredState.name) : false;
 
   const handleEnter = useCallback((name: string) => setHoveredName(name), []);
   const handleLeave = useCallback(() => setHoveredName(null), []);
@@ -117,17 +137,23 @@ export function IndiaMap({ states, onSelectState }: Props) {
       </div>
 
       {/* Floating preview: inline below the map on mobile, fixed to the
-          right edge of the viewport on desktop so it stays visible while
+          side of the viewport on desktop so it stays visible while
           scrolling / hovering across the map. Anchored below the sticky
           site header (top-24) and above the viewport bottom so tall cards
-          are always fully reachable. */}
-      <div className="lg:fixed lg:bottom-6 lg:right-6 lg:top-24 lg:z-30 lg:w-[340px] lg:overflow-y-auto">
+          are always fully reachable. The container is click-through
+          (pointer-events-none) so it never blocks map hovers; the card
+          itself re-enables events. Eastern states dock the panel left. */}
+      <div
+        className={`pointer-events-none lg:fixed lg:bottom-6 lg:top-24 lg:z-30 lg:w-[340px] lg:overflow-y-auto ${
+          dockLeft ? "lg:left-6" : "lg:right-6"
+        }`}
+      >
         {hoveredState ? (
-          <div className="lg:rounded-2xl lg:shadow-xl">
+          <div className="pointer-events-auto lg:rounded-2xl lg:shadow-xl">
             <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
           </div>
         ) : (
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in lg:p-4 lg:text-center lg:shadow-xl">
+          <div className="pointer-events-auto rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in lg:p-4 lg:text-center lg:shadow-xl">
             <div className="flex flex-col items-center gap-3 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 lg:h-10 lg:w-10">
                 <MapPin className="h-7 w-7 text-primary-500 lg:h-5 lg:w-5" />
