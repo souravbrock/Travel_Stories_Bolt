@@ -31,5 +31,11 @@ yarn-error.*
 .env*.local
 .env
 
+# server / preview config with secrets (copy from config.sample.php)
+config/config.php
+
+# local preview build (regenerated via scripts/preview.sh)
+preview/
+
 # typescript
 *.tsbuildinfo

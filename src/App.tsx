@@ -1,14 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   Compass,
-  Map as MapIcon,
   Sparkles,
   Package,
   LayoutGrid,
 } from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
-import { isSupabaseConfigured } from "./lib/supabase";
 import { ConfigNotice } from "./components/ConfigNotice";
 import { IndiaMap } from "./components/IndiaMap";
 import { StateMap } from "./components/StateMap";
@@ -30,10 +28,6 @@ function App() {
   const [tab, setTab] = useState<Tab>("map");
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setLoading(false);
-      return;
-    }
     let active = true;
     fetchStates()
       .then((data) => {
@@ -176,9 +170,7 @@ function App() {
 
       {/* Main content */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {!isSupabaseConfigured ? (
-          <ConfigNotice context="The map explorer" />
-        ) : tab === "packages" ? (
+        {tab === "packages" ? (
           <Marketplace />
         ) : loading ? (
           <div className="flex min-h-[500px] items-center justify-center">
@@ -190,17 +182,7 @@ function App() {
             </div>
           </div>
         ) : error ? (
-          <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-error-500/10">
-              <MapIcon className="h-7 w-7 text-error-500" />
-            </div>
-            <p className="text-sm font-medium text-slate-700">
-              Failed to load travel data
-            </p>
-            <p className="text-xs text-slate-500">
-              Please check your connection and try again.
-            </p>
-          </div>
+          <ConfigNotice context="The map explorer" />
         ) : view.level === "india" ? (
           <div className="ts-fade-in">
             <div className="mb-6 text-center">

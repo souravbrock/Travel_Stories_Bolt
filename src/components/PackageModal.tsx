@@ -14,6 +14,7 @@ import {
   Route,
 } from "lucide-react";
 import type { TravelPackage } from "../lib/types";
+import { sendInquiry } from "../lib/data";
 import { RatingStars } from "./RatingStars";
 
 interface Props {
@@ -24,6 +25,8 @@ interface Props {
 export function PackageModal({ pkg, onClose }: Props) {
   const [showInquiry, setShowInquiry] = useState(false);
   const [inquirySent, setInquirySent] = useState(false);
+  const [inquiryError, setInquiryError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -34,7 +37,23 @@ export function PackageModal({ pkg, onClose }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setInquirySent(true);
+    setSending(true);
+    setInquiryError(null);
+    sendInquiry({
+      package_id: pkg.id,
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      travelers: form.travelers,
+      message: form.message,
+    })
+      .then(() => setInquirySent(true))
+      .catch((err: unknown) =>
+        setInquiryError(
+          err instanceof Error ? err.message : "Could not send inquiry.",
+        ),
+      )
+      .finally(() => setSending(false));
   };
 
   return (
@@ -317,12 +336,16 @@ export function PackageModal({ pkg, onClose }: Props) {
                 </button>
                 <button
                   type="submit"
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
+                  disabled={sending}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:opacity-60"
                 >
                   <Send className="h-4 w-4" />
-                  Send Inquiry
+                  {sending ? "Sending..." : "Send Inquiry"}
                 </button>
               </div>
+              {inquiryError && (
+                <p className="mt-2 text-sm text-error-600">{inquiryError}</p>
+              )}
             </form>
           ) : null}
 

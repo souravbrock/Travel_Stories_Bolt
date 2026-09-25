@@ -2,32 +2,38 @@
 
 Interactive India travel discovery app: state → district → tourist spot maps,
 nearby-spot distances, stays, plus a curated tour-package marketplace. Built
-with React + TypeScript + Vite + Tailwind + Supabase.
+with React + TypeScript + Vite + Tailwind, a **PHP + MariaDB backend**
+(`api/`), no Supabase. Hosted on `trvlstory.reddevils.co.in` (cPanel);
+see `docs/HOSTING.md`.
 
-## Quick start
+## Quick start (local preview, no accounts needed)
 
 ```bash
 npm install
-cp .env.example .env   # then fill in your Supabase values
-npm run dev
+npm run build
+python3 scripts/make_preview.py   # dist + api + SQLite DB into preview/
+php -S localhost:8080 -t preview
 ```
+
+Open http://localhost:8080 — full site with all 36 states.
 
 | Script          | Purpose                          |
 | --------------- | -------------------------------- |
-| `npm run dev`   | Start Vite dev server            |
+| `npm run dev`   | Vite dev server (proxies /api → localhost:8080) |
 | `npm run build` | Type-check (`tsc -b`) + prod build |
 | `npm run preview` | Preview the production build   |
 | `npm run lint`  | Lint with Oxlint                 |
 
-## Environment
+## Backend + database
 
-Required (see `.env.example`):
-
-- `VITE_SUPABASE_URL` — Supabase project URL
-- `VITE_SUPABASE_ANON_KEY` — Supabase anon/public key
-
-Without these, the app renders a setup notice instead of crashing
-(see `src/lib/supabase.ts`, `src/components/ConfigNotice.tsx`).
+- `api/*.php` — read-only catalogue endpoints + `inquire.php` (POST).
+  Same code runs locally (SQLite) and on cPanel (MySQL) via `config.php`.
+- `database/schema.mysql.sql` / `schema.sqlite.sql`, portable `seed.sql`
+  (generated: `python3 scripts/seed_convert.py`).
+- `config/config.sample.php` → copy to `config.php` (git-ignored; on the
+  server it lives outside the docroot — see `docs/HOSTING.md`).
+- The `supabase/` folder is kept only as the content source of truth for
+  regenerating `seed.sql`; the app no longer depends on Supabase.
 
 ## Database
 
@@ -58,9 +64,9 @@ All tables are public-read (anon SELECT) via RLS; writes happen via migrations o
 - `src/components/StateMap.tsx` — district map + spot list
 - `src/components/SpotDetail.tsx` — nearby distances, accommodations
 - `src/components/Marketplace.tsx` / `PackageModal.tsx` — packages + inquiry form
-- `src/lib/data.ts` — Supabase queries + haversine distance helpers
+- `src/lib/data.ts` — API queries + haversine distance helpers
+- `src/lib/api.ts` — fetch wrapper (`VITE_API_BASE`, default same-origin `/api`)
 - `src/lib/mapData.ts` — TopoJSON CDN URLs (udit-001/india-maps-data)
-- `src/lib/supabase.ts` — lazy client, `isSupabaseConfigured` guard
 
 ## Map data
 
@@ -77,6 +83,7 @@ State/district geometry comes from `udit-001/india-maps-data` via jsDelivr
 - Seed data has `image_url` only for `travel_packages`; states / spots /
   accommodations have the column but no seeded images, so those fall back to
   colored placeholders.
-- Package inquiry + accommodation "Book Now" are UI-only (no backend table).
+- Package inquiries are stored in the `inquiries` table via `api/inquire.php`;
+  accommodation "Book Now" buttons are still UI-only.
 - `StateMap.getCenter()` has tuned centers for 5 seeded states; other states
   fall back to the India-wide center.

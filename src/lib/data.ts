@@ -1,4 +1,4 @@
-import { getSupabase } from "./supabase";
+import { apiGet, apiPost } from "./api";
 import type {
   State,
   District,
@@ -10,58 +10,29 @@ import type {
 } from "./types";
 
 export async function fetchStates(): Promise<State[]> {
-  const { data, error } = await getSupabase()
-    .from("states")
-    .select("*")
-    .order("name");
-  if (error) throw error;
-  return data ?? [];
+  return apiGet<State[]>("/states.php");
 }
 
 export async function fetchDistricts(stateId: number): Promise<District[]> {
-  const { data, error } = await getSupabase()
-    .from("districts")
-    .select("*")
-    .eq("state_id", stateId)
-    .order("name");
-  if (error) throw error;
-  return data ?? [];
+  return apiGet<District[]>(`/districts.php?state_id=${stateId}`);
 }
 
 export async function fetchSpotsByDistrict(
   districtId: number,
 ): Promise<TouristSpot[]> {
-  const { data, error } = await getSupabase()
-    .from("tourist_spots")
-    .select("*")
-    .eq("district_id", districtId)
-    .order("rating", { ascending: false });
-  if (error) throw error;
-  return data ?? [];
+  return apiGet<TouristSpot[]>(`/spots.php?district_id=${districtId}`);
 }
 
 export async function fetchSpotsByState(
   stateId: number,
 ): Promise<TouristSpot[]> {
-  const { data, error } = await getSupabase()
-    .from("tourist_spots")
-    .select("*, districts!inner(state_id)")
-    .eq("districts.state_id", stateId)
-    .order("rating", { ascending: false });
-  if (error) throw error;
-  return (data ?? []) as unknown as TouristSpot[];
+  return apiGet<TouristSpot[]>(`/spots.php?state_id=${stateId}`);
 }
 
 export async function fetchAccommodations(
   spotId: number,
 ): Promise<Accommodation[]> {
-  const { data, error } = await getSupabase()
-    .from("accommodations")
-    .select("*")
-    .eq("tourist_spot_id", spotId)
-    .order("price_per_night", { ascending: true });
-  if (error) throw error;
-  return data ?? [];
+  return apiGet<Accommodation[]>(`/accommodations.php?spot_id=${spotId}`);
 }
 
 const EARTH_R_KM = 6371;
@@ -111,19 +82,22 @@ export function computeNearbySpots(
 }
 
 export async function fetchPackages(): Promise<TravelPackage[]> {
-  const { data, error } = await getSupabase()
-    .from("travel_packages")
-    .select("*, agent:travel_agents(*)")
-    .order("rating", { ascending: false });
-  if (error) throw error;
-  return (data ?? []) as unknown as TravelPackage[];
+  return apiGet<TravelPackage[]>("/packages.php");
 }
 
 export async function fetchAgents(): Promise<TravelAgent[]> {
-  const { data, error } = await getSupabase()
-    .from("travel_agents")
-    .select("*")
-    .order("rating", { ascending: false });
-  if (error) throw error;
-  return data ?? [];
+  return apiGet<TravelAgent[]>("/agents.php");
+}
+
+export interface InquiryInput {
+  package_id: number | null;
+  name: string;
+  email: string;
+  phone: string;
+  travelers: string;
+  message: string;
+}
+
+export async function sendInquiry(input: InquiryInput): Promise<{ ok: boolean; id: number }> {
+  return apiPost<{ ok: boolean; id: number }>("/inquire.php", input);
 }
