@@ -31,7 +31,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
   const handleLeave = useCallback(() => setHoveredName(null), []);
 
   return (
-    <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="grid w-full grid-cols-1 gap-6">
       {/* Map */}
       <div className="relative min-w-0 rounded-2xl bg-gradient-to-br from-primary-50 to-sand-50 p-4 shadow-sm ring-1 ring-sand-200">
         <ComposableMap
@@ -116,20 +116,24 @@ export function IndiaMap({ states, onSelectState }: Props) {
         </div>
       </div>
 
-      {/* Preview card */}
-      <div className="lg:sticky lg:top-6 lg:self-start">
+      {/* Floating preview: inline below the map on mobile, fixed to the
+          right edge of the viewport on desktop so it stays visible while
+          scrolling / hovering across the map. */}
+      <div className="lg:fixed lg:right-6 lg:top-1/2 lg:z-30 lg:w-[340px] lg:-translate-y-1/2">
         {hoveredState ? (
-          <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
+          <div className="lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:rounded-2xl lg:shadow-xl">
+            <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
+          </div>
         ) : (
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in">
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in lg:p-4 lg:text-center lg:shadow-xl">
             <div className="flex flex-col items-center gap-3 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-50">
-                <MapPin className="h-7 w-7 text-primary-500" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 lg:h-10 lg:w-10">
+                <MapPin className="h-7 w-7 text-primary-500 lg:h-5 lg:w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-800">
+              <h3 className="text-lg font-semibold text-slate-800 lg:text-sm">
                 Explore India
               </h3>
-              <p className="text-sm leading-relaxed text-slate-500">
+              <p className="text-sm leading-relaxed text-slate-500 lg:text-xs">
                 Hover over any state on the map to see travel highlights and
                 seasonal recommendations. Click to dive into districts and
                 tourist spots.
