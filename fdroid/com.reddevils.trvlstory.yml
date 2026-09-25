@@ -1,0 +1,44 @@
+# Draft F-Droid metadata for com.reddevils.trvlstory.
+# F-Droid builds and signs apps from source itself: to list the app, open a
+# merge request against https://gitlab.com/fdroid/fdroiddata adding this file as
+# metadata/com.reddevils.trvlstory.yml (see
+# https://f-droid.org/docs/Submitting_to_F-Droid_Quick_Start_Guide/).
+# Descriptions below mirror fastlane/metadata/android/en-US/ in this repo.
+
+Categories:
+  - Travel & Maps
+License: MIT
+AuthorName: Sourav Mukherjee
+SourceCode: https://github.com/souravbrock/Travel_Stories_Bolt
+IssueTracker: https://github.com/souravbrock/Travel_Stories_Bolt/issues
+
+AutoName: Travel Stories
+Summary: Interactive maps of every Indian state, stays, and tour packages
+Description: |-
+  Travel Stories is an interactive guide to Incredible India.
+
+  * Explore all 36 states and union territories on rich interactive maps
+  * Drill into districts, tourist spots, distances, and nearby stays
+  * Browse curated tour packages from verified travel agents
+
+  The app is a WebView shell around the open-source site
+  trvlstory.reddevils.co.in (MIT, same repo) with an offline fallback page.
+
+RepoType: git
+Repo: https://github.com/souravbrock/Travel_Stories_Bolt
+
+Builds:
+  - versionName: 1.0.0
+    versionCode: 1
+    commit: v1.0.0
+    subdir: mobile
+    gradle:
+      - assembleDebug
+    # NOTE: adjust to the F-Droid convention (assembleRelease + their
+    # signing) during review; debug APKs here are only for sideloading.
+
+AutoUpdateMode: Version v%v
+UpdateCheckMode: Tags
+UpdateCheckData: '"version":".*?"'
+CurrentVersion: 1.0.0
+CurrentVersionCode: 1

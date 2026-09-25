@@ -1,0 +1,9 @@
+Travel Stories is an interactive guide to Incredible India.
+
+• Explore all 36 states and union territories on rich interactive maps
+• Drill into districts, tourist spots, distances, and nearby stays
+• Browse curated tour packages from verified travel agents and send inquiries
+• Works fully online with live data from trvlstory.reddevils.co.in
+
+Free, no account needed. Open source (MIT) at
+github.com/souravbrock/Travel_Stories_Bolt.

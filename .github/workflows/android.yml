@@ -1,0 +1,81 @@
+# Builds the Android APK (Capacitor shell around the live site) and
+# attaches it to GitHub Releases (tracked by Obtanium). Pushes build a
+# debug APK artifact; version tags (v*) create a public release.
+# F-Droid note: F-Droid builds from source itself; see docs/ANDROID-APK.md
+# for the submission metadata prepared in fdroid/.
+
+name: Android APK
+
+on:
+  push:
+    branches: [feat/all-india-states, main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build native shell
+        working-directory: mobile
+        run: |
+          npm ci
+          npx cap add android
+          pip install pillow -q
+          python3 gen_icons.py
+          npx cap sync android
+
+      - name: Stamp version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: mobile
+        run: |
+          VER="${GITHUB_REF#refs/tags/v}"
+          sed -i "s/versionName .*/versionName \"$VER\"/" android/app/build.gradle
+          sed -i "s/versionCode .*/versionCode ${{ github.run_number }}/" android/app/build.gradle
+          grep -E "version(Name|Code)" android/app/build.gradle
+
+      - name: Assemble debug APK
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        working-directory: mobile
+        run: |
+          ls android/app/build/outputs/apk/debug/
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             "travel-stories-${GITHUB_REF_NAME:-dev}.apk"
+          ls -la *.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: travel-stories-apk
+          path: mobile/travel-stories-*.apk
+
+      - name: GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mobile/travel-stories-*.apk
+          generate_release_notes: true
