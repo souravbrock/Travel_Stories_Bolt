@@ -1,4 +1,5 @@
 # Deploys the production build + PHP API to cPanel over SSH on every push.
+# Uses plain scp (rsync is NOT available on shared cPanel hosting).
 # Required repository secrets (Settings -> Secrets and variables -> Actions):
 #   CPANEL_SSH_KEY  private key matching the server's authorized_keys
 #                   (contents of ~/.ssh/cpanel-deploy)
@@ -27,21 +28,26 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Assemble release
+      - name: Upload over SSH (scp)
+        env:
+          SSH_KEY: ${{ secrets.CPANEL_SSH_KEY }}
+          SSH_HOST: ${{ secrets.CPANEL_HOST }}
+          SSH_USER: ${{ secrets.CPANEL_USER }}
+          DOCROOT: ${{ secrets.CPANEL_DOCROOT }}
         run: |
-          rm -rf release && mkdir -p release/api
-          cp -r dist/* release/
-          cp api/*.php release/api/
-          cp deploy/htaccess release/.htaccess
-
-      - name: Upload over SSH
-        uses: easingthemes/ssh-deploy@v5.1.0
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.CPANEL_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.CPANEL_HOST }}
-          REMOTE_USER: ${{ secrets.CPANEL_USER }}
-          TARGET: ${{ secrets.CPANEL_DOCROOT }}
-          SOURCE: release/
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s' "$SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat >> ~/.ssh/config <<EOF
+          Host cpanel
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/deploy_key
+            StrictHostKeyChecking accept-new
+          EOF
+          scp -r dist/index.html dist/assets dist/favicon.svg dist/logo.svg "cpanel:$DOCROOT/"
+          scp api/*.php "cpanel:$DOCROOT/api/"
+          scp deploy/htaccess "cpanel:$DOCROOT/.htaccess"
 
       - name: Fix permissions and verify
         uses: appleboy/ssh-action@v1
