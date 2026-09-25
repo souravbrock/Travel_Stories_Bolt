@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Plus Jakarta Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+
+  --color-primary-50: #eef7ff;
+  --color-primary-100: #d9edff;
+  --color-primary-200: #bce0ff;
+  --color-primary-300: #8ecdff;
+  --color-primary-400: #59b0ff;
+  --color-primary-500: #2f8fff;
+  --color-primary-600: #1a6ef5;
+  --color-primary-700: #1456e1;
+  --color-primary-800: #1746b6;
+  --color-primary-900: #193f8f;
+  --color-primary-950: #142857;
+
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+
+  --color-success-500: #16a34a;
+  --color-success-600: #15803d;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-error-500: #dc2626;
+  --color-error-600: #b91c1c;
+
+  --color-sand-50: #faf8f3;
+  --color-sand-100: #f3eee2;
+  --color-sand-200: #e7dcc4;
+  --color-sand-300: #d6c39e;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: #faf8f3;
+  color: #1f2937;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+/* Map styles */
+.ts-geography {
+  fill: #cfe3f5;
+  stroke: #ffffff;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  transition: fill 180ms ease, stroke 180ms ease;
+  cursor: pointer;
+  outline: none;
+}
+.ts-geography:hover {
+  fill: #2f8fff;
+  stroke: #ffffff;
+}
+.ts-geography-selected {
+  fill: #1a6ef5;
+  stroke: #ffffff;
+}
+.ts-geography-dim {
+  fill: #e3edf6;
+}
+.ts-geography-district {
+  fill: #e7dcc4;
+  stroke: #ffffff;
+  stroke-width: 0.6;
+}
+.ts-geography-district:hover {
+  fill: #f97316;
+}
+.ts-geography-district-selected {
+  fill: #ea580c;
+}
+
+@keyframes ts-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ts-fade-in {
+  animation: ts-fade-in 320ms ease both;
+}
+
+@keyframes ts-slide-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.ts-slide-in {
+  animation: ts-slide-in 300ms ease both;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d6c39e; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #b9a578; }
