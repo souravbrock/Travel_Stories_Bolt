@@ -62,3 +62,33 @@ export interface NearbySpot {
   distanceKm: number;
   travelTimeMin: number;
 }
+
+export interface TravelAgent {
+  id: number;
+  name: string;
+  logo_url: string | null;
+  verified: boolean;
+  rating: number;
+  description: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+}
+
+export interface TravelPackage {
+  id: number;
+  agent_id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  state_name: string | null;
+  duration_days: number | null;
+  price: number | null;
+  inclusions: string[];
+  exclusions: string[];
+  itinerary: string[];
+  image_url: string | null;
+  rating: number;
+  category: string | null;
+  max_group_size: number | null;
+  agent?: TravelAgent;
+}

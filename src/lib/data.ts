@@ -5,6 +5,8 @@ import type {
   TouristSpot,
   Accommodation,
   NearbySpot,
+  TravelAgent,
+  TravelPackage,
 } from "./types";
 
 export async function fetchStates(): Promise<State[]> {
@@ -106,4 +108,22 @@ export function computeNearbySpots(
     })
     .filter((n) => n.distanceKm <= maxKm)
     .sort((a, b) => a.distanceKm - b.distanceKm);
+}
+
+export async function fetchPackages(): Promise<TravelPackage[]> {
+  const { data, error } = await supabase
+    .from("travel_packages")
+    .select("*, agent:travel_agents(*)")
+    .order("rating", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as TravelPackage[];
+}
+
+export async function fetchAgents(): Promise<TravelAgent[]> {
+  const { data, error } = await supabase
+    .from("travel_agents")
+    .select("*")
+    .order("rating", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
 }

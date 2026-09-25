@@ -1,10 +1,19 @@
 import { useEffect, useState, useCallback } from "react";
-import { Compass, Map as MapIcon, Sparkles } from "lucide-react";
+import {
+  Compass,
+  Map as MapIcon,
+  Sparkles,
+  Package,
+  LayoutGrid,
+} from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
 import { IndiaMap } from "./components/IndiaMap";
 import { StateMap } from "./components/StateMap";
 import { SpotDetail } from "./components/SpotDetail";
+import { Marketplace } from "./components/Marketplace";
+
+type Tab = "map" | "packages";
 
 type View =
   | { level: "india" }
@@ -16,6 +25,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [view, setView] = useState<View>({ level: "india" });
+  const [tab, setTab] = useState<Tab>("map");
 
   useEffect(() => {
     let active = true;
@@ -75,7 +85,10 @@ function App() {
       <header className="sticky top-0 z-20 border-b border-sand-200 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <button
-            onClick={handleBackToIndia}
+            onClick={() => {
+              setTab("map");
+              handleBackToIndia();
+            }}
             className="flex items-center gap-2.5"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-sm">
@@ -91,37 +104,30 @@ function App() {
             </div>
           </button>
 
-          {/* Breadcrumb */}
-          <nav className="hidden items-center gap-2 text-sm text-slate-500 sm:flex">
+          {/* Tabs */}
+          <nav className="flex items-center gap-1 rounded-xl bg-sand-100 p-1">
             <button
-              onClick={handleBackToIndia}
-              className={`transition-colors hover:text-primary-600 ${
-                view.level === "india" ? "font-semibold text-primary-700" : ""
+              onClick={() => setTab("map")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                tab === "map"
+                  ? "bg-white text-primary-700 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
               }`}
             >
-              India
+              <LayoutGrid className="h-4 w-4" />
+              <span className="hidden sm:inline">Map Explorer</span>
             </button>
-            {view.level !== "india" && (
-              <>
-                <span className="text-sand-300">/</span>
-                <button
-                  onClick={handleBackToIndia}
-                  className="transition-colors hover:text-primary-600"
-                >
-                  {view.level === "state"
-                    ? view.state.name
-                    : view.parentState.name}
-                </button>
-              </>
-            )}
-            {view.level === "spot" && (
-              <>
-                <span className="text-sand-300">/</span>
-                <span className="font-semibold text-primary-700">
-                  {view.spot.name}
-                </span>
-              </>
-            )}
+            <button
+              onClick={() => setTab("packages")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                tab === "packages"
+                  ? "bg-white text-primary-700 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              <Package className="h-4 w-4" />
+              <span className="hidden sm:inline">Tour Packages</span>
+            </button>
           </nav>
 
           <div className="flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1.5 text-xs font-medium text-accent-700">
@@ -129,11 +135,44 @@ function App() {
             {states.length} States
           </div>
         </div>
+
+        {/* Breadcrumb (only for map tab) */}
+        {tab === "map" && view.level !== "india" && (
+          <div className="border-t border-sand-100 px-4 py-2">
+            <nav className="mx-auto flex max-w-7xl items-center gap-2 text-sm text-slate-500">
+              <button
+                onClick={handleBackToIndia}
+                className="transition-colors hover:text-primary-600"
+              >
+                India
+              </button>
+              <span className="text-sand-300">/</span>
+              <button
+                onClick={handleBackToIndia}
+                className="transition-colors hover:text-primary-600"
+              >
+                {view.level === "state"
+                  ? view.state.name
+                  : view.parentState.name}
+              </button>
+              {view.level === "spot" && (
+                <>
+                  <span className="text-sand-300">/</span>
+                  <span className="font-semibold text-primary-700">
+                    {view.spot.name}
+                  </span>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Main content */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {loading ? (
+        {tab === "packages" ? (
+          <Marketplace />
+        ) : loading ? (
           <div className="flex min-h-[500px] items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary-200 border-t-primary-600" />
