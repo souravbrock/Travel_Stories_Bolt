@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
+import { isSupabaseConfigured } from "./lib/supabase";
+import { ConfigNotice } from "./components/ConfigNotice";
 import { IndiaMap } from "./components/IndiaMap";
 import { StateMap } from "./components/StateMap";
 import { SpotDetail } from "./components/SpotDetail";
@@ -28,6 +30,10 @@ function App() {
   const [tab, setTab] = useState<Tab>("map");
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     let active = true;
     fetchStates()
       .then((data) => {
@@ -170,7 +176,9 @@ function App() {
 
       {/* Main content */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {tab === "packages" ? (
+        {!isSupabaseConfigured ? (
+          <ConfigNotice context="The map explorer" />
+        ) : tab === "packages" ? (
           <Marketplace />
         ) : loading ? (
           <div className="flex min-h-[500px] items-center justify-center">

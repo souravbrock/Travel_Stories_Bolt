@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { getSupabase } from "./supabase";
 import type {
   State,
   District,
@@ -10,7 +10,7 @@ import type {
 } from "./types";
 
 export async function fetchStates(): Promise<State[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("states")
     .select("*")
     .order("name");
@@ -19,7 +19,7 @@ export async function fetchStates(): Promise<State[]> {
 }
 
 export async function fetchDistricts(stateId: number): Promise<District[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("districts")
     .select("*")
     .eq("state_id", stateId)
@@ -31,7 +31,7 @@ export async function fetchDistricts(stateId: number): Promise<District[]> {
 export async function fetchSpotsByDistrict(
   districtId: number,
 ): Promise<TouristSpot[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("tourist_spots")
     .select("*")
     .eq("district_id", districtId)
@@ -43,7 +43,7 @@ export async function fetchSpotsByDistrict(
 export async function fetchSpotsByState(
   stateId: number,
 ): Promise<TouristSpot[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("tourist_spots")
     .select("*, districts!inner(state_id)")
     .eq("districts.state_id", stateId)
@@ -55,7 +55,7 @@ export async function fetchSpotsByState(
 export async function fetchAccommodations(
   spotId: number,
 ): Promise<Accommodation[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("accommodations")
     .select("*")
     .eq("tourist_spot_id", spotId)
@@ -111,7 +111,7 @@ export function computeNearbySpots(
 }
 
 export async function fetchPackages(): Promise<TravelPackage[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("travel_packages")
     .select("*, agent:travel_agents(*)")
     .order("rating", { ascending: false });
@@ -120,7 +120,7 @@ export async function fetchPackages(): Promise<TravelPackage[]> {
 }
 
 export async function fetchAgents(): Promise<TravelAgent[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("travel_agents")
     .select("*")
     .order("rating", { ascending: false });

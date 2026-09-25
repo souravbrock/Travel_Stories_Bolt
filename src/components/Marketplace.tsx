@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import type { TravelPackage } from "../lib/types";
 import { fetchPackages } from "../lib/data";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { ConfigNotice } from "./ConfigNotice";
 import { PackageModal } from "./PackageModal";
 
 const CATEGORIES = ["All", "Heritage", "Beach", "Adventure", "Honeymoon", "Pilgrimage"];
@@ -28,6 +30,10 @@ export function Marketplace() {
   const [selected, setSelected] = useState<TravelPackage | null>(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     let active = true;
     fetchPackages()
       .then((data) => {
@@ -66,6 +72,10 @@ export function Marketplace() {
     });
     return list;
   }, [packages, category, search, sortBy]);
+
+  if (!isSupabaseConfigured) {
+    return <ConfigNotice context="The tour marketplace" />;
+  }
 
   if (loading) {
     return (
