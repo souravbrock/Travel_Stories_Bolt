@@ -118,10 +118,12 @@ export function IndiaMap({ states, onSelectState }: Props) {
 
       {/* Floating preview: inline below the map on mobile, fixed to the
           right edge of the viewport on desktop so it stays visible while
-          scrolling / hovering across the map. */}
-      <div className="lg:fixed lg:right-6 lg:top-1/2 lg:z-30 lg:w-[340px] lg:-translate-y-1/2">
+          scrolling / hovering across the map. Anchored below the sticky
+          site header (top-24) and above the viewport bottom so tall cards
+          are always fully reachable. */}
+      <div className="lg:fixed lg:bottom-6 lg:right-6 lg:top-24 lg:z-30 lg:w-[340px] lg:overflow-y-auto">
         {hoveredState ? (
-          <div className="lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:rounded-2xl lg:shadow-xl">
+          <div className="lg:rounded-2xl lg:shadow-xl">
             <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
           </div>
         ) : (

@@ -98,7 +98,7 @@ h1, h2, h3, h4 {
   to { opacity: 1; transform: translateY(0); }
 }
 .ts-fade-in {
-  animation: ts-fade-in 320ms ease both;
+  animation: ts-fade-in 320ms ease backwards;
 }
 
 @keyframes ts-slide-in {
@@ -106,7 +106,7 @@ h1, h2, h3, h4 {
   to { opacity: 1; transform: translateX(0); }
 }
 .ts-slide-in {
-  animation: ts-slide-in 300ms ease both;
+  animation: ts-slide-in 300ms ease backwards;
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }

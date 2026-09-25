@@ -235,7 +235,7 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
         </div>
 
         {/* Side panel: district spots */}
-        <div className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
+        <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
           {selectedDistrict ? (
             <div className="ts-slide-in">
               <div className="mb-3 flex items-center justify-between">
