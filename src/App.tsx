@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import {
-  Compass,
   Sparkles,
   Package,
   LayoutGrid,
@@ -92,7 +91,7 @@ function App() {
             className="flex items-center gap-2.5"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 shadow-sm">
-              <Compass className="h-5 w-5 text-white" />
+              <img src="/logo.svg" alt="Travel Stories logo" className="h-6 w-6" />
             </div>
             <div className="text-left">
               <h1 className="text-lg font-bold leading-tight text-slate-800">

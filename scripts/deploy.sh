@@ -13,4 +13,6 @@ ssh -i "$KEY" "$HOST" "mkdir -p $DOCROOT/api"
 scp -i "$KEY" -r dist/* "$HOST:$DOCROOT/"
 scp -i "$KEY" -r api/*.php "$HOST:$DOCROOT/api/"
 scp -i "$KEY" deploy/htaccess "$HOST:$DOCROOT/.htaccess"
+# scp-created dirs can land as 700 (Apache then 403s assets) — normalize.
+ssh -i "$KEY" "$HOST" "chmod 755 $DOCROOT/assets && chmod 644 $DOCROOT/assets/*"
 echo "Deployed. Verify: https://trvlstory.reddevils.co.in/api/health.php"

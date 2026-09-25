@@ -1,4 +1,4 @@
-# Travel Stories — Discover India (Bolt)
+# Travel Stories — Discover India
 
 Interactive India travel discovery app: state → district → tourist spot maps,
 nearby-spot distances, stays, plus a curated tour-package marketplace. Built

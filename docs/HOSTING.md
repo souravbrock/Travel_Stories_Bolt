@@ -28,9 +28,16 @@ public_html/trvlstory.reddevils.co.in/.htaccess (from deploy/htaccess)
 
 ## Deploy / update
 
+Push to `feat/all-india-states` (or `main`) and the GitHub Actions workflow
+`Deploy to cPanel` builds and uploads automatically. One-time setup: add
+repository secrets `CPANEL_SSH_KEY` (private key), `CPANEL_HOST`,
+`CPANEL_USER`, `CPANEL_DOCROOT` (see `.github/workflows/deploy-cpanel.yml`).
+
+Manual fallback (same steps the workflow runs):
+
 ```bash
 npm run build
-bash scripts/deploy.sh     # copies dist + api + .htaccess over SSH
+bash scripts/deploy.sh     # copies dist + api + .htaccess over SSH, fixes perms
 ```
 
 Then verify `https://trvlstory.reddevils.co.in/api/health.php` returns
