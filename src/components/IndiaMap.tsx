@@ -31,12 +31,12 @@ export function IndiaMap({ states, onSelectState }: Props) {
   const handleLeave = useCallback(() => setHoveredName(null), []);
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
+    <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
       {/* Map */}
-      <div className="relative rounded-2xl bg-gradient-to-br from-primary-50 to-sand-50 p-4 shadow-sm ring-1 ring-sand-200">
+      <div className="relative min-w-0 rounded-2xl bg-gradient-to-br from-primary-50 to-sand-50 p-4 shadow-sm ring-1 ring-sand-200">
         <ComposableMap
           projection="geoMercator"
-          projectionConfig={{ scale: 1100, center: [78.96, 22.5] }}
+          projectionConfig={{ scale: 950, center: [78.96, 23.2] }}
           style={{ width: "100%", height: "auto" }}
         >
           <Geographies geography={INDIA_TOPO_URL}>

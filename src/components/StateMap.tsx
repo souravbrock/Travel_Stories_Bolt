@@ -140,9 +140,9 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
+      <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         {/* District map */}
-        <div className="rounded-2xl bg-gradient-to-br from-sand-50 to-primary-50 p-4 shadow-sm ring-1 ring-sand-200">
+        <div className="min-w-0 rounded-2xl bg-gradient-to-br from-sand-50 to-primary-50 p-4 shadow-sm ring-1 ring-sand-200">
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ scale: getScale(state.name), center: getCenter(state.name) }}
