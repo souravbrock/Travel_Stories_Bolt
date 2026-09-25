@@ -65,8 +65,9 @@ jobs:
         working-directory: mobile
         run: |
           ls android/app/build/outputs/apk/debug/
+          SAFE_REF="$(echo "${GITHUB_REF_NAME:-dev}" | tr '/' '-')"
           cp android/app/build/outputs/apk/debug/app-debug.apk \
-             "travel-stories-${GITHUB_REF_NAME:-dev}.apk"
+             "travel-stories-$SAFE_REF.apk"
           ls -la *.apk
 
       - uses: actions/upload-artifact@v4
