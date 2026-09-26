@@ -60,16 +60,37 @@ jobs:
           grep -E "version(Name|Code)" android/app/build.gradle
 
       - name: Assemble debug APK
+        if: "!startsWith(github.ref, 'refs/tags/v')"
         working-directory: mobile/android
         run: ./gradlew assembleDebug --no-daemon
+
+      - name: Signing key (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: mobile
+        env:
+          KEY_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$KEY_B64" > android/release.jks.b64
+          base64 -d android/release.jks.b64 > android/release.jks
+          rm android/release.jks.b64
+          python3 sign_release.py android/app/build.gradle
+
+      - name: Assemble release APK (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: mobile/android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --no-daemon
 
       - name: Rename APK
         working-directory: mobile
         run: |
-          ls android/app/build/outputs/apk/debug/
+          find android/app/build/outputs/apk -name "*.apk"
           SAFE_REF="$(echo "${GITHUB_REF_NAME:-dev}" | tr '/' '-')"
-          cp android/app/build/outputs/apk/debug/app-debug.apk \
-             "travel-stories-$SAFE_REF.apk"
+          APK="$(find android/app/build/outputs/apk -name "*.apk" | head -1)"
+          cp "$APK" "travel-stories-$SAFE_REF.apk"
           ls -la *.apk
 
       - uses: actions/upload-artifact@v4

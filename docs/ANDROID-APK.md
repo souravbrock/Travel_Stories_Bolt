@@ -20,8 +20,14 @@ mobile/
 ## Distribution
 
 - **GitHub**: every push builds a debug APK (workflow artifact). Pushing a
-  tag `v*` (e.g. `v1.0.0`) creates a public **Release** with the APK
-  attached — download straight from the Releases page.
+  tag `v*` (e.g. `v1.0.0`) builds a **release APK signed with the permanent
+  upload key** and creates a public **Release** with it attached.
+- **Signing**: one RSA upload key (`trvlstory-release.jks`, kept OFF-machine
+  plus a local backup) signs every release, so updates install cleanly over
+  older versions. CI secrets: `ANDROID_KEYSTORE_BASE64`,
+  `ANDROID_KEY_ALIAS` (`trvlstory`), `ANDROID_KEYSTORE_PASSWORD`,
+  `ANDROID_KEY_PASSWORD`. Debug builds (branch runs, local) stay
+  debug-signed for sideload testing.
 - **Obtanium**: in the Obtanium app, add `souravbrock/Travel_Stories_Bolt`
   as a GitHub source — it tracks Releases and offers updates automatically.
 - **F-Droid**: F-Droid builds from source itself. A ready-to-submit draft
