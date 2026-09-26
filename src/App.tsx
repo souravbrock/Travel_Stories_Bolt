@@ -3,6 +3,7 @@ import {
   Sparkles,
   Package,
   LayoutGrid,
+  Wand2,
 } from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
@@ -11,8 +12,9 @@ import { IndiaMap } from "./components/IndiaMap";
 import { StateMap } from "./components/StateMap";
 import { SpotDetail } from "./components/SpotDetail";
 import { Marketplace } from "./components/Marketplace";
+import { TourBuilder } from "./components/TourBuilder";
 
-type Tab = "map" | "packages";
+type Tab = "map" | "packages" | "builder";
 
 type View =
   | { level: "india" }
@@ -127,6 +129,17 @@ function App() {
               <Package className="h-4 w-4" />
               <span className="hidden sm:inline">Tour Packages</span>
             </button>
+            <button
+              onClick={() => setTab("builder")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                tab === "builder"
+                  ? "bg-white text-primary-700 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              <Wand2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Custom Tour</span>
+            </button>
           </nav>
 
           <div className="flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1.5 text-xs font-medium text-accent-700">
@@ -171,6 +184,8 @@ function App() {
       <main className="mx-auto max-w-7xl px-4 py-6">
         {tab === "packages" ? (
           <Marketplace />
+        ) : tab === "builder" ? (
+          <TourBuilder states={states} />
         ) : loading ? (
           <div className="flex min-h-[500px] items-center justify-center">
             <div className="flex flex-col items-center gap-4">
