@@ -237,11 +237,15 @@ export function TourBuilder({ states }: Props) {
   return (
     <div className="ts-fade-in">
       {/* Header */}
-      <div className="mb-6 text-center">
-        <h2 className="text-3xl font-bold text-slate-800 sm:text-4xl">
+      <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-500 p-8 shadow-lg shadow-emerald-500/20 sm:p-10">
+        <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+          <Sparkles className="h-3 w-3" />
+          Personalized Itinerary
+        </div>
+        <h2 className="text-3xl font-bold text-white drop-shadow-lg sm:text-4xl">
           Build Your Custom Tour
         </h2>
-        <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90">
           Create a personalized itinerary tailored to your route, transport,
           stays, and meal preferences. Our team will craft the perfect trip for
           you.
@@ -261,9 +265,9 @@ export function TourBuilder({ states }: Props) {
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
                       isActive
-                        ? "bg-primary-600 text-white shadow-md shadow-primary-200"
+                        ? "bg-gradient-to-br from-cyan-500 to-teal-600 text-white shadow-md shadow-cyan-500/30"
                         : isDone
-                          ? "bg-success-500 text-white"
+                          ? "bg-gradient-to-br from-emerald-500 to-green-600 text-white"
                           : "bg-sand-100 text-slate-400"
                     }`}
                   >
@@ -276,9 +280,9 @@ export function TourBuilder({ states }: Props) {
                   <span
                     className={`hidden text-xs font-medium sm:block ${
                       isActive
-                        ? "text-primary-700"
+                        ? "text-cyan-700"
                         : isDone
-                          ? "text-success-600"
+                          ? "text-emerald-600"
                           : "text-slate-400"
                     }`}
                   >
@@ -288,7 +292,7 @@ export function TourBuilder({ states }: Props) {
                 {i < STEPS.length - 1 && (
                   <div
                     className={`mx-2 h-0.5 flex-1 rounded-full transition-colors ${
-                      step > s.id ? "bg-success-500" : "bg-sand-200"
+                      step > s.id ? "bg-gradient-to-r from-emerald-500 to-green-500" : "bg-sand-200"
                     }`}
                   />
                 )}
@@ -299,7 +303,7 @@ export function TourBuilder({ states }: Props) {
       </div>
 
       {/* Step content */}
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200">
+      <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-emerald-200">
         {step === 1 && (
           <Step1Transit
             config={config}
@@ -339,7 +343,7 @@ export function TourBuilder({ states }: Props) {
           <button
             onClick={() => setStep((s) => Math.min(4, s + 1))}
             disabled={!canProceed}
-            className="flex items-center gap-1.5 rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-cyan-500/30 transition-all hover:shadow-lg hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Continue
             <ChevronRight className="h-4 w-4" />

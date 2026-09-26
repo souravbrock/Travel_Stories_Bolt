@@ -104,10 +104,10 @@ export function SpotDetail({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Distance matrix */}
-        <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-sand-200">
+        <div className="rounded-2xl bg-white p-5 shadow-md ring-1 ring-cyan-200">
           <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50">
-              <Route className="h-4 w-4 text-primary-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-100 to-teal-100">
+              <Route className="h-4 w-4 text-cyan-600" />
             </div>
             <div>
               <h3 className="font-semibold text-slate-800">
@@ -180,7 +180,7 @@ export function SpotDetail({
                           onClick={() =>
                             onSelectSpot(n.spot, allSpots)
                           }
-                          className="flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary-700"
+                          className="flex items-center gap-1 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-110"
                         >
                           View Details
                           <ArrowLeft className="h-3 w-3 rotate-180" />
@@ -195,10 +195,10 @@ export function SpotDetail({
         </div>
 
         {/* Accommodations */}
-        <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-sand-200">
+        <div className="rounded-2xl bg-white p-5 shadow-md ring-1 ring-orange-200">
           <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-50">
-              <BedDouble className="h-4 w-4 text-accent-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-100 to-amber-100">
+              <BedDouble className="h-4 w-4 text-orange-600" />
             </div>
             <div>
               <h3 className="font-semibold text-slate-800">
@@ -301,7 +301,7 @@ export function SpotDetail({
                         </span>
                         <span className="text-xs text-slate-500">/night</span>
                       </div>
-                      <button className="rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary-700">
+                      <button className="rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-110">
                         Book Now
                       </button>
                     </div>

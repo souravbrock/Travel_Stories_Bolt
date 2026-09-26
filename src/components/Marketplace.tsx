@@ -9,13 +9,21 @@ import {
   Star,
   SlidersHorizontal,
   X,
+  Sparkles,
 } from "lucide-react";
 import type { TravelPackage } from "../lib/types";
 import { fetchPackages } from "../lib/data";
 import { ConfigNotice } from "./ConfigNotice";
 import { PackageModal } from "./PackageModal";
 
-const CATEGORIES = ["All", "Heritage", "Beach", "Adventure", "Honeymoon", "Pilgrimage"];
+const CATEGORIES = [
+  { label: "All", color: "from-slate-600 to-slate-700" },
+  { label: "Heritage", color: "from-amber-600 to-orange-600" },
+  { label: "Beach", color: "from-cyan-500 to-blue-500" },
+  { label: "Adventure", color: "from-emerald-500 to-teal-500" },
+  { label: "Honeymoon", color: "from-rose-500 to-pink-500" },
+  { label: "Pilgrimage", color: "from-violet-500 to-purple-500" },
+];
 
 export function Marketplace() {
   const [packages, setPackages] = useState<TravelPackage[]>([]);
@@ -83,11 +91,15 @@ export function Marketplace() {
   return (
     <div className="ts-fade-in">
       {/* Hero */}
-      <div className="mb-6 text-center">
-        <h2 className="text-3xl font-bold text-slate-800 sm:text-4xl">
+      <div className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-400 p-8 shadow-lg shadow-orange-500/20 sm:p-10">
+        <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+          <Sparkles className="h-3 w-3" />
+          Curated by Verified Agents
+        </div>
+        <h2 className="text-3xl font-bold text-white drop-shadow-lg sm:text-4xl">
           Curated Tour Packages
         </h2>
-        <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90">
           Browse and compare ready-made tour packages from verified travel
           agents across India. Find your perfect trip and connect directly with
           the agent.
@@ -136,15 +148,15 @@ export function Marketplace() {
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                category === cat
-                  ? "bg-primary-600 text-white"
+              key={cat.label}
+              onClick={() => setCategory(cat.label)}
+              className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all ${
+                category === cat.label
+                  ? `bg-gradient-to-r ${cat.color} text-white shadow-md`
                   : "bg-white text-slate-600 ring-1 ring-sand-200 hover:bg-sand-50"
               }`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -195,7 +207,7 @@ function PackageCard({
   return (
     <button
       onClick={onClick}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-sand-200 transition-all hover:shadow-lg hover:ring-primary-200"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-sand-200 transition-all hover:shadow-xl hover:ring-cyan-300"
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden">
@@ -287,7 +299,7 @@ function PackageCard({
               </span>
             </div>
           </div>
-          <span className="rounded-lg bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary-700 transition-colors group-hover:bg-primary-600 group-hover:text-white">
+          <span className="rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all group-hover:from-cyan-600 group-hover:to-teal-600">
             View Details
           </span>
         </div>

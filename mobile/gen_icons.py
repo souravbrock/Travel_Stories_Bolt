@@ -6,11 +6,11 @@ from PIL import Image, ImageDraw
 ROOT = pathlib.Path(__file__).resolve().parent
 RES = ROOT / "android" / "app" / "src" / "main" / "res"
 
-TOP = (47, 143, 255)
-BOT = (26, 110, 245)
+TOP = (34, 209, 238)
+BOT = (8, 137, 166)
 WHITE = (255, 255, 255, 255)
 ORANGE = (251, 146, 60, 255)
-DARK = (26, 110, 245, 255)
+DARK = (8, 137, 166, 255)
 
 DENSITIES = {"mdpi": 48, "hdpi": 72, "xhdpi": 96, "xxhdpi": 144, "xxxhdpi": 192}
 

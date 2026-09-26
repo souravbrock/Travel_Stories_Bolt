@@ -14,7 +14,7 @@ export function RatingStars({ rating, size = "sm" }: Props) {
           key={i}
           className={`${dims} ${
             i <= Math.round(rating)
-              ? "fill-accent-500 text-accent-500"
+              ? "fill-amber-400 text-amber-400"
               : "fill-sand-200 text-sand-200"
           }`}
         />

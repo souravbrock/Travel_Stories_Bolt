@@ -127,12 +127,12 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
           </div>
         </div>
         <div className="hidden gap-2 sm:flex">
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-700">
             <Calendar className="h-3 w-3" />
             {state.best_season ?? "Year-round"}
           </span>
           {state.peak_season && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-1 text-xs font-medium text-accent-700">
+            <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-700">
               <Sparkles className="h-3 w-3" />
               Peak: {state.peak_season}
             </span>
@@ -142,7 +142,7 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
 
       <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         {/* District map */}
-        <div className="min-w-0 rounded-2xl bg-gradient-to-br from-sand-50 to-primary-50 p-4 shadow-sm ring-1 ring-sand-200">
+        <div className="min-w-0 rounded-2xl bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 shadow-md ring-1 ring-orange-200">
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{ scale: getScale(state.name), center: getCenter(state.name) }}
@@ -319,10 +319,10 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
               )}
             </div>
           ) : (
-            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200">
+            <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-orange-200">
               <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-50">
-                  <MapPin className="h-6 w-6 text-accent-500" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orange-100 to-amber-100">
+                  <MapPin className="h-6 w-6 text-orange-500" />
                 </div>
                 <h3 className="text-base font-semibold text-slate-800">
                   {districts.length} Districts in {state.name}
@@ -353,7 +353,7 @@ export function StateMap({ state, onBack, onSelectSpot }: Props) {
                       <span className="flex items-center gap-1 text-xs text-slate-400">
                         {count > 0 && (
                           <>
-                            <Star className="h-3 w-3 fill-accent-500 text-accent-500" />
+                            <Star className="h-3 w-3 fill-orange-500 text-orange-500" />
                             {count}
                           </>
                         )}

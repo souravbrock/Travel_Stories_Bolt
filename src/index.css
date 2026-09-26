@@ -4,28 +4,48 @@
   --font-sans: "Plus Jakarta Sans", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-heading: "Plus Jakarta Sans", system-ui, "Segoe UI", Roboto, sans-serif;
 
-  --color-primary-50: #eef7ff;
-  --color-primary-100: #d9edff;
-  --color-primary-200: #bce0ff;
-  --color-primary-300: #8ecdff;
-  --color-primary-400: #59b0ff;
-  --color-primary-500: #2f8fff;
-  --color-primary-600: #1a6ef5;
-  --color-primary-700: #1456e1;
-  --color-primary-800: #1746b6;
-  --color-primary-900: #193f8f;
-  --color-primary-950: #142857;
+  --color-primary-50: #ecfeff;
+  --color-primary-100: #cff9fe;
+  --color-primary-200: #a5f0fc;
+  --color-primary-300: #67e3f9;
+  --color-primary-400: #22d1ee;
+  --color-primary-500: #06a8c4;
+  --color-primary-600: #0889a6;
+  --color-primary-700: #0e7088;
+  --color-primary-800: #155a6f;
+  --color-primary-900: #144b5e;
+  --color-primary-950: #0d3a4c;
 
-  --color-accent-50: #fff7ed;
-  --color-accent-100: #ffedd5;
-  --color-accent-200: #fed7aa;
-  --color-accent-300: #fdba74;
-  --color-accent-400: #fb923c;
-  --color-accent-500: #f97316;
-  --color-accent-600: #ea580c;
-  --color-accent-700: #c2410c;
-  --color-accent-800: #9a3412;
-  --color-accent-900: #7c2d12;
+  --color-secondary-50: #fff7ed;
+  --color-secondary-100: #ffedd5;
+  --color-secondary-200: #fed7aa;
+  --color-secondary-300: #fdba74;
+  --color-secondary-400: #fb923c;
+  --color-secondary-500: #f97316;
+  --color-secondary-600: #ea580c;
+  --color-secondary-700: #c2410c;
+  --color-secondary-800: #9a3412;
+  --color-secondary-900: #7c2d12;
+
+  --color-accent-50: #f0fdf4;
+  --color-accent-100: #dcfce7;
+  --color-accent-200: #bbf7d0;
+  --color-accent-300: #86efac;
+  --color-accent-400: #4ade80;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+  --color-accent-700: #15803d;
+  --color-accent-800: #166534;
+  --color-accent-900: #14532d;
+
+  --color-rose-50: #fff1f2;
+  --color-rose-100: #ffe4e6;
+  --color-rose-200: #fecdd3;
+  --color-rose-300: #fda4af;
+  --color-rose-400: #fb7185;
+  --color-rose-500: #f43f5e;
+  --color-rose-600: #e11d48;
+  --color-rose-700: #be123c;
 
   --color-success-500: #16a34a;
   --color-success-600: #15803d;
@@ -34,10 +54,11 @@
   --color-error-500: #dc2626;
   --color-error-600: #b91c1c;
 
-  --color-sand-50: #faf8f3;
-  --color-sand-100: #f3eee2;
-  --color-sand-200: #e7dcc4;
-  --color-sand-300: #d6c39e;
+  --color-sand-50: #fefdfb;
+  --color-sand-100: #f8f5ef;
+  --color-sand-200: #ede7d8;
+  --color-sand-300: #ddd3bd;
+  --color-sand-400: #c4b696;
 }
 
 :root {
@@ -50,7 +71,7 @@
 
 body {
   margin: 0;
-  background: #faf8f3;
+  background: var(--color-sand-50);
   color: #1f2937;
 }
 
@@ -60,9 +81,18 @@ h1, h2, h3, h4 {
   color: #0f172a;
 }
 
-/* Map styles */
+/* ===== Decorative background ===== */
+.ts-app-bg {
+  background-color: #fefdfb;
+  background-image:
+    radial-gradient(at 15% 10%, rgba(34, 209, 238, 0.08) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(249, 115, 22, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(34, 197, 94, 0.05) 0px, transparent 50%);
+}
+
+/* ===== Map styles ===== */
 .ts-geography {
-  fill: #cfe3f5;
+  fill: #cfeef6;
   stroke: #ffffff;
   stroke-width: 0.5;
   stroke-linejoin: round;
@@ -71,18 +101,18 @@ h1, h2, h3, h4 {
   outline: none;
 }
 .ts-geography:hover {
-  fill: #2f8fff;
+  fill: #22d1ee;
   stroke: #ffffff;
 }
 .ts-geography-selected {
-  fill: #1a6ef5;
+  fill: #0889a6;
   stroke: #ffffff;
 }
 .ts-geography-dim {
   fill: #e3edf6;
 }
 .ts-geography-district {
-  fill: #e7dcc4;
+  fill: #fde8d0;
   stroke: #ffffff;
   stroke-width: 0.6;
 }
@@ -93,6 +123,7 @@ h1, h2, h3, h4 {
   fill: #ea580c;
 }
 
+/* ===== Animations ===== */
 @keyframes ts-fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -109,7 +140,67 @@ h1, h2, h3, h4 {
   animation: ts-slide-in 300ms ease backwards;
 }
 
+@keyframes ts-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.ts-float {
+  animation: ts-float 4s ease-in-out infinite;
+}
+
+@keyframes ts-pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 0.3; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+.ts-pulse-ring {
+  animation: ts-pulse-ring 2.5s ease-in-out infinite;
+}
+
+@keyframes ts-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== Gradient utilities ===== */
+.ts-gradient-primary {
+  background: linear-gradient(135deg, #0889a6 0%, #22d1ee 100%);
+}
+.ts-gradient-sunset {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%);
+}
+.ts-gradient-ocean {
+  background: linear-gradient(135deg, #144b5e 0%, #0889a6 40%, #22d1ee 100%);
+}
+.ts-gradient-meadow {
+  background: linear-gradient(135deg, #15803d 0%, #22c55e 50%, #4ade80 100%);
+}
+.ts-gradient-hero {
+  background:
+    linear-gradient(135deg, rgba(14, 112, 136, 0.95) 0%, rgba(34, 209, 238, 0.85) 50%, rgba(34, 197, 94, 0.75) 100%);
+}
+.ts-text-gradient {
+  background: linear-gradient(135deg, #0889a6 0%, #22d1ee 50%, #22c55e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ts-text-sunset {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ===== Glass effect ===== */
+.ts-glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ===== Scrollbar ===== */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d6c39e; border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: #b9a578; }
+::-webkit-scrollbar-thumb { background: #c4b696; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #a89a72; }
