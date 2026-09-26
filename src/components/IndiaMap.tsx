@@ -6,7 +6,7 @@ import {
   Marker,
 } from "react-simple-maps";
 import { geoCentroid } from "d3-geo";
-import { MapPin, Calendar, Sparkles, ArrowRight } from "lucide-react";
+import { Calendar, Sparkles, ArrowRight } from "lucide-react";
 import type { State } from "../lib/types";
 import { INDIA_TOPO_URL } from "../lib/mapData";
 
@@ -152,23 +152,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
           <div className="pointer-events-auto lg:rounded-2xl lg:shadow-xl">
             <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
           </div>
-        ) : (
-          <div className="pointer-events-auto rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in lg:p-4 lg:text-center lg:shadow-xl">
-            <div className="flex flex-col items-center gap-3 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-100 to-teal-100 lg:h-10 lg:w-10">
-                <MapPin className="h-7 w-7 text-cyan-600 lg:h-5 lg:w-5" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-800 lg:text-sm">
-                Explore India
-              </h3>
-              <p className="text-sm leading-relaxed text-slate-500 lg:text-xs">
-                Hover over any state on the map to see travel highlights and
-                seasonal recommendations. Click to dive into districts and
-                tourist spots.
-              </p>
-            </div>
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
