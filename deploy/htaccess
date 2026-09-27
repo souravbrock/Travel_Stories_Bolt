@@ -7,6 +7,9 @@
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Pass the Authorization header to PHP (Bearer tokens for auth API)
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   # API files are real; never rewrite them to index.html
   RewriteCond %{REQUEST_URI} ^/api/ [NC]
   RewriteRule ^ - [L]

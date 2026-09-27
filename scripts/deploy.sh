@@ -6,13 +6,16 @@
 set -euo pipefail
 KEY="C:/Users/soura/.ssh/cpanel-deploy"
 HOST="reddevil@kaveri.domainadda.com"
-DOCROOT="/home/reddevil/trvlstory.reddevils.co.in"
+DOCROOT="/home/reddevil/public_html/trvlstory.reddevils.co.in"
 
 npm run build
-ssh -i "$KEY" "$HOST" "mkdir -p $DOCROOT/api"
+ssh -i "$KEY" "$HOST" "mkdir -p $DOCROOT/api/auth $DOCROOT/api/vendor $DOCROOT/api/admin"
 scp -i "$KEY" -r dist/* "$HOST:$DOCROOT/"
-scp -i "$KEY" -r api/*.php "$HOST:$DOCROOT/api/"
+scp -i "$KEY" api/*.php "$HOST:$DOCROOT/api/"
+scp -i "$KEY" api/auth/*.php "$HOST:$DOCROOT/api/auth/"
+scp -i "$KEY" api/vendor/*.php "$HOST:$DOCROOT/api/vendor/"
+scp -i "$KEY" api/admin/*.php "$HOST:$DOCROOT/api/admin/"
 scp -i "$KEY" deploy/htaccess "$HOST:$DOCROOT/.htaccess"
-# scp-created dirs can land as 700 (Apache then 403s assets) — normalize.
-ssh -i "$KEY" "$HOST" "chmod 755 $DOCROOT/assets && chmod 644 $DOCROOT/assets/*"
+# scp-created dirs can land as 700 (Apache then 403s) — normalize.
+ssh -i "$KEY" "$HOST" "chmod 755 $DOCROOT/assets $DOCROOT/api/auth $DOCROOT/api/vendor $DOCROOT/api/admin && chmod 644 $DOCROOT/assets/*"
 echo "Deployed. Verify: https://trvlstory.reddevils.co.in/api/health.php"

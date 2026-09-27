@@ -9,7 +9,7 @@ run(function () {
        JOIN travel_agents a ON a.id = p.agent_id
       ORDER BY p.rating DESC"
   )->fetchAll();
-  return array_map(function ($p) {
+  $mapped = array_map(function ($p) {
     $agent = [
       'id' => (int)$p['a_id'],
       'name' => $p['a_name'],
@@ -31,4 +31,43 @@ run(function () {
     $p['agent'] = $agent;
     return $p;
   }, $rows);
+
+  // Approved vendor packages appear alongside curated ones (offset ids so
+  // React keys and inquiry routing never collide with curated ids).
+  $vp = db()->query(
+    "SELECT p.*, u.full_name AS vendor_name, u.vendor_approved AS vendor_ok
+       FROM vendor_packages p JOIN users u ON u.id = p.vendor_id
+      WHERE p.approved = 1 ORDER BY p.created_at DESC"
+  )->fetchAll();
+  foreach ($vp as $v) {
+    $mapped[] = [
+      'id' => 1000000 + (int)$v['id'],
+      'agent_id' => 0,
+      'title' => $v['title'],
+      'slug' => 'vendor-' . (int)$v['id'],
+      'description' => $v['description'],
+      'state_name' => $v['state_name'],
+      'duration_days' => fint($v['duration_days'] ?? null),
+      'price' => fnum($v['price'] ?? null),
+      'inclusions' => [],
+      'exclusions' => [],
+      'itinerary' => [],
+      'image_url' => $v['image_url'],
+      'rating' => 0.0,
+      'category' => $v['category'],
+      'max_group_size' => fint($v['max_group_size'] ?? null),
+      'agent' => [
+        'id' => 0,
+        'name' => $v['vendor_name'],
+        'logo_url' => null,
+        'verified' => (bool)$v['vendor_ok'],
+        'rating' => 0.0,
+        'description' => null,
+        'contact_email' => null,
+        'contact_phone' => null,
+      ],
+    ];
+  }
+
+  return $mapped;
 });

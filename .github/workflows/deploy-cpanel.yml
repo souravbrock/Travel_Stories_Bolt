@@ -31,9 +31,12 @@ jobs:
 
       - name: Assemble release
         run: |
-          rm -rf release && mkdir -p release/api
+          rm -rf release && mkdir -p release/api/auth release/api/vendor release/api/admin
           cp -r dist/* release/
           cp api/*.php release/api/
+          cp api/auth/*.php release/api/auth/
+          cp api/vendor/*.php release/api/vendor/
+          cp api/admin/*.php release/api/admin/
           cp deploy/htaccess release/.htaccess
           ls -la release release/api | head -20
 

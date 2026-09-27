@@ -7,17 +7,24 @@ import {
   Plane,
   Heart,
   Shield,
+  Store,
+  User,
+  LogOut,
 } from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
 import { ConfigNotice } from "./components/ConfigNotice";
+import { useAuth } from "./lib/auth";
+import { AuthScreen } from "./components/AuthScreen";
 import { IndiaMap } from "./components/IndiaMap";
 import { StateMap } from "./components/StateMap";
 import { SpotDetail } from "./components/SpotDetail";
 import { Marketplace } from "./components/Marketplace";
 import { TourBuilder } from "./components/TourBuilder";
+import { VendorDashboard } from "./components/VendorDashboard";
+import { AdminConsole } from "./components/AdminConsole";
 
-type Tab = "map" | "packages" | "builder";
+type Tab = "map" | "packages" | "builder" | "dashboard" | "account";
 
 type View =
   | { level: "india" }
@@ -31,6 +38,7 @@ const TAB_CONFIG: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
 ];
 
 function App() {
+  const { session, profile, signOut } = useAuth();
   const [states, setStates] = useState<State[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -135,11 +143,69 @@ function App() {
                 </button>
               );
             })}
+            {session && profile?.role === "vendor" && (
+              <button
+                onClick={() => setTab("dashboard")}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
+                  tab === "dashboard"
+                    ? "bg-white text-slate-800 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                <Store className={`h-4 w-4 ${tab === "dashboard" ? "text-cyan-600" : ""}`} />
+                <span className="hidden sm:inline">My Dashboard</span>
+              </button>
+            )}
+            {session && profile?.role === "admin" && (
+              <button
+                onClick={() => setTab("dashboard")}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
+                  tab === "dashboard"
+                    ? "bg-white text-slate-800 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                <Shield className={`h-4 w-4 ${tab === "dashboard" ? "text-cyan-600" : ""}`} />
+                <span className="hidden sm:inline">Admin Console</span>
+              </button>
+            )}
           </nav>
 
-          <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1.5 text-xs font-semibold text-orange-700 ring-1 ring-orange-200">
-            <Sparkles className="h-3.5 w-3.5" />
-            {states.length} States
+          <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1.5 text-xs font-semibold text-orange-700 ring-1 ring-orange-200 sm:flex">
+              <Sparkles className="h-3.5 w-3.5" />
+              {states.length} States
+            </div>
+            {session && profile ? (
+              <>
+                <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-50 to-teal-50 px-3 py-1.5 text-xs font-semibold text-cyan-700 ring-1 ring-cyan-200 md:flex">
+                  <User className="h-3.5 w-3.5" />
+                  {profile.full_name}
+                </div>
+                <button
+                  onClick={() => {
+                    signOut();
+                    setTab("map");
+                  }}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-sand-100 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-500"
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setTab("account")}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
+                  tab === "account"
+                    ? "bg-cyan-600 text-white shadow-sm"
+                    : "bg-sand-100 text-slate-600 hover:bg-sand-200"
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Sign In</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -177,7 +243,13 @@ function App() {
 
       {/* Main content */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {tab === "packages" ? (
+        {tab === "account" && !session ? (
+          <AuthScreen />
+        ) : tab === "dashboard" && session && profile?.role === "vendor" ? (
+          <VendorDashboard />
+        ) : tab === "dashboard" && session && profile?.role === "admin" ? (
+          <AdminConsole />
+        ) : tab === "packages" ? (
           <Marketplace />
         ) : tab === "builder" ? (
           <TourBuilder states={states} />

@@ -23,8 +23,15 @@ public_html/trvlstory.reddevils.co.in/.htaccess (from deploy/htaccess)
 3. **Schema + data**: imported `database/schema.mysql.sql` then
    `database/seed.sql` via `mysql` CLI (UI alternative: phpMyAdmin Import).
    Expect: 36 states, 92 districts, 154 spots, 75 stays, 4 agents, 10 packages.
+   For accounts: also import `database/schema.auth.mysql.sql` once
+   (re-import-safe).
 4. **Config**: `/home/reddevil/trvlstory-config/config.php` (mode 600) with
-   the db credentials.
+   the db credentials. Copy `mail.from` from `config.sample.php`; create
+   that address in cPanel → Email Accounts and confirm SPF/DKIM in
+   Email Deliverability so OTP emails land in inboxes.
+5. **First admin**: sign up normally on the site (any role), then promote:
+   `UPDATE users SET role='admin' WHERE email='you@example.com';`
+   Vendors self-register and appear in the Admin Console for approval.
 
 ## Deploy / update
 

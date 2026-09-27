@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "./api";
+import { authed } from "./auth";
 import type {
   State,
   District,
@@ -7,6 +8,9 @@ import type {
   NearbySpot,
   TravelAgent,
   TravelPackage,
+  VendorPackage,
+  VendorAccommodation,
+  VendorVehicle,
 } from "./types";
 
 export async function fetchStates(): Promise<State[]> {
@@ -100,4 +104,64 @@ export interface InquiryInput {
 
 export async function sendInquiry(input: InquiryInput): Promise<{ ok: boolean; id: number }> {
   return apiPost<{ ok: boolean; id: number }>("/inquire.php", input);
+}
+
+export type ListingType = "packages" | "accommodations" | "vehicles";
+
+export interface VendorListings {
+  packages: VendorPackage[];
+  accommodations: VendorAccommodation[];
+  vehicles: VendorVehicle[];
+}
+
+export async function fetchVendorListings(token: string): Promise<VendorListings> {
+  return authed<VendorListings>(token, "/vendor/list.php");
+}
+
+export async function createListing(
+  token: string,
+  type: ListingType,
+  data: Record<string, unknown>,
+): Promise<{ ok: boolean; id: number }> {
+  return authed<{ ok: boolean; id: number }>(token, "/vendor/create.php", {
+    method: "POST",
+    body: JSON.stringify({ type, data }),
+  });
+}
+
+export async function deleteListing(
+  token: string,
+  type: ListingType,
+  id: number,
+): Promise<{ ok: boolean }> {
+  return authed<{ ok: boolean }>(token, "/vendor/delete.php", {
+    method: "POST",
+    body: JSON.stringify({ type, id }),
+  });
+}
+
+export interface AdminOverview extends VendorListings {
+  vendors: import("./types").Profile[];
+}
+
+export async function fetchAdminOverview(token: string): Promise<AdminOverview> {
+  return authed<AdminOverview>(token, "/admin/overview.php");
+}
+
+export async function approveVendor(token: string, id: number): Promise<{ ok: boolean }> {
+  return authed<{ ok: boolean }>(token, "/admin/approve-vendor.php", {
+    method: "POST",
+    body: JSON.stringify({ id }),
+  });
+}
+
+export async function approveListing(
+  token: string,
+  type: ListingType,
+  id: number,
+): Promise<{ ok: boolean }> {
+  return authed<{ ok: boolean }>(token, "/admin/approve-listing.php", {
+    method: "POST",
+    body: JSON.stringify({ type, id }),
+  });
 }

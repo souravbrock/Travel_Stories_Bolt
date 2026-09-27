@@ -11,11 +11,22 @@ try {
     fail('A valid name and email are required');
   }
   $st = db()->prepare(
-    "INSERT INTO inquiries (package_id, name, email, phone, travelers, message)
-     VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO inquiries (package_id, vendor_package_id, name, email, phone, travelers, message)
+     VALUES (?, ?, ?, ?, ?, ?, ?)"
   );
+  $rawPkg = ($b['package_id'] ?? null) !== null ? (int)$b['package_id'] : null;
+  $pkg = null;
+  $vpkg = null;
+  if ($rawPkg !== null) {
+    if ($rawPkg >= 1000000) {
+      $vpkg = $rawPkg - 1000000;
+    } else {
+      $pkg = $rawPkg;
+    }
+  }
   $st->execute([
-    ($b['package_id'] ?? null) !== null ? (int)$b['package_id'] : null,
+    $pkg,
+    $vpkg,
     $name, $email,
     trim((string)($b['phone'] ?? '')),
     trim((string)($b['travelers'] ?? '')),

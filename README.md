@@ -28,6 +28,9 @@ Open http://localhost:8080 — full site with all 36 states.
 
 - `api/*.php` — read-only catalogue endpoints + `inquire.php` (POST).
   Same code runs locally (SQLite) and on cPanel (MySQL) via `config.php`.
+- `api/auth/*.php` — email-OTP signup/signin, token sessions (no Supabase).
+- `api/vendor/*.php`, `api/admin/*.php` — vendor listings + approvals.
+  Approved vendor packages/stays merge into the public marketplace.
 - `database/schema.mysql.sql` / `schema.sqlite.sql`, portable `seed.sql`
   (generated: `python3 scripts/seed_convert.py`).
 - `config/config.sample.php` → copy to `config.php` (git-ignored; on the
