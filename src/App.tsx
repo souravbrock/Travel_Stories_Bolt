@@ -325,7 +325,7 @@ function App() {
       {/* Footer */}
       <footer className="border-t border-sand-200 bg-white/60 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-slate-400">
-          Travel Stories — Interactive India Travel Discovery
+          Travel Stories v{__APP_VERSION__} — Interactive India Travel Discovery
         </div>
       </footer>
     </div>
