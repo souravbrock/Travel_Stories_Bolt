@@ -6,7 +6,6 @@ import {
   BedDouble,
   Car,
   CheckCircle2,
-  XCircle,
   Clock,
   Loader2,
   MapPin,
@@ -43,7 +42,7 @@ export function AdminConsole() {
       .select("*, profiles!vendor_packages_vendor_id_fkey(full_name)")
       .order("created_at", { ascending: false });
     const mapped = (data ?? []).map((p: Record<string, unknown>) => ({
-      ...(p as VendorPackage),
+      ...(p as unknown as VendorPackage),
       vendor_name: (p.profiles as { full_name: string } | null)?.full_name,
     }));
     setPackages(mapped);
@@ -55,7 +54,7 @@ export function AdminConsole() {
       .select("*, profiles!vendor_accommodations_vendor_id_fkey(full_name)")
       .order("created_at", { ascending: false });
     const mapped = (data ?? []).map((a: Record<string, unknown>) => ({
-      ...(a as VendorAccommodation),
+      ...(a as unknown as VendorAccommodation),
       vendor_name: (a.profiles as { full_name: string } | null)?.full_name,
     }));
     setAccommodations(mapped);
@@ -67,7 +66,7 @@ export function AdminConsole() {
       .select("*, profiles!vendor_vehicles_vendor_id_fkey(full_name)")
       .order("created_at", { ascending: false });
     const mapped = (data ?? []).map((v: Record<string, unknown>) => ({
-      ...(v as VendorVehicle),
+      ...(v as unknown as VendorVehicle),
       vendor_name: (v.profiles as { full_name: string } | null)?.full_name,
     }));
     setVehicles(mapped);

@@ -7,7 +7,6 @@ import {
   Trash2,
   CheckCircle2,
   Clock,
-  XCircle,
   Loader2,
   Store,
   Image as ImageIcon,

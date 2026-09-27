@@ -19,9 +19,9 @@ type AuthState = {
     fullName: string,
     phone: string,
     role: UserRole,
-    vendorType?: string,
-  password: string,
-  verificationCode: string,
+    vendorType: string | undefined,
+    password: string,
+    verificationCode: string,
   ) => Promise<{ error: string | null }>;
   sendVerificationCode: (email: string) => Promise<{ error: string | null; devCode?: string }>;
   verifyCode: (email: string, code: string) => Promise<{ error: string | null }>;
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, newSession) => {
+      (_event, newSession) => {
         setSession(newSession);
         if (newSession?.user) {
           (async () => {
