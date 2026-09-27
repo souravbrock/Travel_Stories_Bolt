@@ -15,6 +15,7 @@ import {
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
 import { ConfigNotice } from "./components/ConfigNotice";
+import { isNativeApp } from "./lib/native";
 import { useAuth } from "./lib/auth";
 import { AuthScreen } from "./components/AuthScreen";
 import { IndiaMap } from "./components/IndiaMap";
@@ -40,6 +41,9 @@ const TAB_CONFIG: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
 
 function App() {
   const { session, profile, loading: authLoading, signOut } = useAuth();
+  // Inside the APK, the punch-hole camera sits in the top area: give the
+  // header extra clearance (in addition to safe-area insets for browsers).
+  const nativePad = isNativeApp() ? "pt-7" : "";
   const [states, setStates] = useState<State[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -120,7 +124,7 @@ function App() {
   return (
     <div className="ts-app-bg min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-sand-200 ts-glass pt-[env(safe-area-inset-top)]">
+      <header className={`sticky top-0 z-20 border-b border-sand-200 ts-glass pt-[env(safe-area-inset-top)] ${nativePad}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <button
             onClick={() => {
