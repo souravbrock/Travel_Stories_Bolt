@@ -41,6 +41,7 @@ preview/
 map-*.png
 auth-*.png
 roles-*.png
+hdr-*.png
 nohint.png
 
 # typescript
