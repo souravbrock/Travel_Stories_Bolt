@@ -92,3 +92,71 @@ export interface TravelPackage {
   max_group_size: number | null;
   agent?: TravelAgent;
 }
+
+export type UserRole = "customer" | "vendor" | "admin";
+
+export type VendorType =
+  | "travel_agent"
+  | "hotel"
+  | "homestay"
+  | "transport"
+  | "ticket_booking";
+
+export interface Profile {
+  id: string;
+  full_name: string;
+  phone: string | null;
+  role: UserRole;
+  email_verified: boolean;
+  password_set: boolean;
+  vendor_type: VendorType | null;
+  vendor_approved: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorPackage {
+  id: string;
+  vendor_id: string;
+  title: string;
+  description: string | null;
+  state_name: string | null;
+  duration_days: number | null;
+  price: number | null;
+  category: string | null;
+  max_group_size: number | null;
+  image_url: string | null;
+  approved: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorAccommodation {
+  id: string;
+  vendor_id: string;
+  name: string;
+  type: string | null;
+  tier: string | null;
+  price_per_night: number | null;
+  address: string | null;
+  amenities: string[];
+  image_url: string | null;
+  rating: number;
+  tourist_spot_id: number | null;
+  approved: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VendorVehicle {
+  id: string;
+  vendor_id: string;
+  vehicle_name: string;
+  vehicle_type: string | null;
+  seats: string | null;
+  price_per_day: number | null;
+  image_url: string | null;
+  approved: boolean;
+  created_at: string;
+  updated_at: string;
+}

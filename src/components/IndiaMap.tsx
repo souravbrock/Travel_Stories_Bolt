@@ -33,7 +33,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
       {/* Map */}
-      <div className="relative rounded-2xl bg-gradient-to-br from-primary-50 to-sand-50 p-4 shadow-sm ring-1 ring-sand-200">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50 p-4 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-200">
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ scale: 1100, center: [78.96, 22.5] }}
@@ -106,7 +106,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
 
         <div className="mt-2 flex items-center justify-center gap-4 text-xs text-slate-500">
           <span className="flex items-center gap-1.5">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-primary-500" />
+            <span className="inline-block h-2.5 w-2.5 rounded-full bg-cyan-500" />
             Click a highlighted state to explore
           </span>
           <span className="flex items-center gap-1.5">
@@ -121,10 +121,10 @@ export function IndiaMap({ states, onSelectState }: Props) {
         {hoveredState ? (
           <StatePreviewCard state={hoveredState} onSelect={onSelectState} />
         ) : (
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-sand-200 ts-fade-in">
+          <div className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-cyan-200 ts-fade-in">
             <div className="flex flex-col items-center gap-3 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-50">
-                <MapPin className="h-7 w-7 text-primary-500" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-cyan-100 to-teal-100">
+                <MapPin className="h-7 w-7 text-cyan-600" />
               </div>
               <h3 className="text-lg font-semibold text-slate-800">
                 Explore India
@@ -150,7 +150,7 @@ function StatePreviewCard({
   onSelect: (s: State) => void;
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-sand-200 ts-fade-in">
+    <div className="overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-cyan-200 ts-fade-in">
       {state.image_url && (
         <div className="relative h-36 overflow-hidden">
           <img
@@ -187,12 +187,12 @@ function StatePreviewCard({
         )}
 
         <div className="mb-3 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-700">
             <Calendar className="h-3 w-3" />
             {state.best_season ?? "Year-round"}
           </span>
           {state.peak_season && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-1 text-xs font-medium text-accent-700">
+            <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-700">
               <Sparkles className="h-3 w-3" />
               Peak: {state.peak_season}
             </span>
@@ -219,7 +219,7 @@ function StatePreviewCard({
 
         <button
           onClick={() => onSelect(state)}
-          className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-cyan-500/30 transition-all hover:shadow-lg hover:shadow-cyan-500/40 hover:brightness-110"
         >
           Explore {state.name}
           <ArrowRight className="h-4 w-4" />

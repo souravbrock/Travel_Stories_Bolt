@@ -1,0 +1,5 @@
+[functions.send-verification]
+verify_jwt = false
+
+[functions.verify-code]
+verify_jwt = false
