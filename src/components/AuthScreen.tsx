@@ -140,7 +140,7 @@ export function AuthScreen() {
   }
 
   return (
-    <div className="ts-app-bg flex min-h-screen items-center justify-center px-4 py-8">
+    <div className="ts-app-bg flex min-h-screen items-center justify-center px-4 pb-8 pt-[max(2rem,env(safe-area-inset-top))]">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
@@ -566,7 +566,7 @@ function SetPasswordScreen({
   onSubmit: () => void;
 }) {
   return (
-    <div className="ts-app-bg flex min-h-screen items-center justify-center px-4 py-8">
+    <div className="ts-app-bg flex min-h-screen items-center justify-center px-4 pb-8 pt-[max(2rem,env(safe-area-inset-top))]">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl ts-gradient-primary shadow-lg shadow-cyan-500/30">

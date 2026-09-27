@@ -120,7 +120,7 @@ function App() {
   return (
     <div className="ts-app-bg min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-sand-200 ts-glass">
+      <header className="sticky top-0 z-20 border-b border-sand-200 ts-glass pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <button
             onClick={() => {
@@ -324,7 +324,7 @@ function App() {
 
       {/* Footer */}
       <footer className="border-t border-sand-200 bg-white/60 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-slate-400">
+        <div className="mx-auto max-w-7xl px-4 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center text-xs text-slate-400">
           Travel Stories v{__APP_VERSION__} — Interactive India Travel Discovery
         </div>
       </footer>

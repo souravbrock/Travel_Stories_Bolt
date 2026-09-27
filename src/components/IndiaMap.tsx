@@ -144,7 +144,7 @@ export function IndiaMap({ states, onSelectState }: Props) {
           (pointer-events-none) so it never blocks map hovers; the card
           itself re-enables events. Eastern states dock the panel left. */}
       <div
-        className={`pointer-events-none lg:fixed lg:bottom-6 lg:top-24 lg:z-30 lg:w-[340px] lg:overflow-y-auto ${
+        className={`pointer-events-none lg:fixed lg:bottom-6 lg:z-30 lg:w-[340px] lg:overflow-y-auto lg:top-[max(6rem,calc(env(safe-area-inset-top)+5rem))] ${
           dockLeft ? "lg:left-6" : "lg:right-6"
         }`}
       >
