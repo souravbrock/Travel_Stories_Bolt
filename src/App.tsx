@@ -133,7 +133,7 @@ function App() {
               <img src="/logo.svg" alt="Travel Stories logo" className="h-6 w-6" />
               <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-orange-400 ring-2 ring-white" />
             </div>
-            <div className="text-left">
+            <div className="hidden min-[500px]:block text-left">
               <h1 className="text-lg font-bold leading-tight text-slate-800">
                 Travel Stories
               </h1>
@@ -192,7 +192,7 @@ function App() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1.5 text-xs font-semibold text-orange-700 ring-1 ring-orange-200 sm:flex">
+            <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 px-3 py-1.5 text-xs font-semibold text-orange-700 ring-1 ring-orange-200 min-[900px]:flex">
               <Sparkles className="h-3.5 w-3.5" />
               {states.length} States
             </div>
