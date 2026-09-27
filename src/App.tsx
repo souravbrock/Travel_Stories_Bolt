@@ -10,6 +10,7 @@ import {
   Store,
   User,
   LogOut,
+  Loader2,
 } from "lucide-react";
 import type { State, TouristSpot } from "./lib/types";
 import { fetchStates } from "./lib/data";
@@ -24,7 +25,7 @@ import { TourBuilder } from "./components/TourBuilder";
 import { VendorDashboard } from "./components/VendorDashboard";
 import { AdminConsole } from "./components/AdminConsole";
 
-type Tab = "map" | "packages" | "builder" | "dashboard" | "account";
+type Tab = "map" | "packages" | "builder" | "dashboard";
 
 type View =
   | { level: "india" }
@@ -38,7 +39,7 @@ const TAB_CONFIG: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
 ];
 
 function App() {
-  const { session, profile, signOut } = useAuth();
+  const { session, profile, loading: authLoading, signOut } = useAuth();
   const [states, setStates] = useState<State[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -96,6 +97,25 @@ function App() {
       setView({ level: "state", state: view.parentState });
     }
   }, [view]);
+
+  // Show splash while the session is being restored
+  if (authLoading) {
+    return (
+      <div className="ts-app-bg flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl ts-gradient-primary shadow-lg shadow-cyan-500/30">
+            <img src="/logo.svg" alt="Travel Stories logo" className="h-7 w-7" />
+          </div>
+          <Loader2 className="h-6 w-6 animate-spin text-cyan-500" />
+        </div>
+      </div>
+    );
+  }
+
+  // Registration first: no browsing without an account
+  if (!session || !profile) {
+    return <AuthScreen />;
+  }
 
   return (
     <div className="ts-app-bg min-h-screen">
@@ -176,36 +196,20 @@ function App() {
               <Sparkles className="h-3.5 w-3.5" />
               {states.length} States
             </div>
-            {session && profile ? (
-              <>
-                <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-50 to-teal-50 px-3 py-1.5 text-xs font-semibold text-cyan-700 ring-1 ring-cyan-200 md:flex">
-                  <User className="h-3.5 w-3.5" />
-                  {profile.full_name}
-                </div>
-                <button
-                  onClick={() => {
-                    signOut();
-                    setTab("map");
-                  }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-sand-100 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-500"
-                  title="Sign out"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setTab("account")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
-                  tab === "account"
-                    ? "bg-cyan-600 text-white shadow-sm"
-                    : "bg-sand-100 text-slate-600 hover:bg-sand-200"
-                }`}
-              >
-                <User className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sign In</span>
-              </button>
-            )}
+            <div className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-50 to-teal-50 px-3 py-1.5 text-xs font-semibold text-cyan-700 ring-1 ring-cyan-200 md:flex">
+              <User className="h-3.5 w-3.5" />
+              {profile.full_name}
+            </div>
+            <button
+              onClick={() => {
+                signOut();
+                setTab("map");
+              }}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-sand-100 text-slate-500 transition-colors hover:bg-red-50 hover:text-red-500"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -243,11 +247,9 @@ function App() {
 
       {/* Main content */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {tab === "account" && !session ? (
-          <AuthScreen />
-        ) : tab === "dashboard" && session && profile?.role === "vendor" ? (
+        {tab === "dashboard" && profile.role === "vendor" ? (
           <VendorDashboard />
-        ) : tab === "dashboard" && session && profile?.role === "admin" ? (
+        ) : tab === "dashboard" && profile.role === "admin" ? (
           <AdminConsole />
         ) : tab === "packages" ? (
           <Marketplace />

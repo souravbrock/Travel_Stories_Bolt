@@ -7,7 +7,41 @@ const p = await b.newPage({ viewport: { width: 1366, height: 900 } });
 const errs = [];
 p.on("pageerror", (e) => errs.push(String(e).split("\n")[0]));
 await p.goto(BASE, { waitUntil: "networkidle" });
+// Gate fast-lane: register via API, inject token, reload into the app
+await p.evaluate(async () => {
+  const email = "suite" + Date.now() + "@test.com";
+  const c = await (
+    await fetch("/api/auth/send-code.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+  ).json();
+  const s = await (
+    await fetch("/api/auth/signup.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        full_name: "Suite",
+        phone: "",
+        role: "customer",
+        vendor_type: null,
+        password: "secret123",
+        code: c.dev_code,
+      }),
+    })
+  ).json();
+  localStorage.setItem("trvlstory_token", s.token);
+});
+await p.reload({ waitUntil: "networkidle" });
 await p.waitForSelector("header nav button", { timeout: 15000 });
+// Sign back out so the vendor registration runs through the gate
+await p.evaluate(() => {
+  const btn = [...document.querySelectorAll("header button")].find((x) => x.title === "Sign out");
+  if (btn) btn.click();
+});
+await p.waitForTimeout(800);
 await p.waitForTimeout(800);
 
 const clickText = async (sel, text) => {
@@ -22,8 +56,6 @@ const clickText = async (sel, text) => {
 };
 
 // ---- vendor signup ----
-await clickText("header button", "Sign In");
-await p.waitForTimeout(400);
 await clickText("button", "Create Account");
 await p.waitForTimeout(300);
 await clickText("button", "Vendor / Service Provider");

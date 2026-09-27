@@ -13,11 +13,41 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(String(e).split("\n")[0]));
 
 await page.goto(BASE, { waitUntil: "networkidle" });
+// Gate fast-lane: register via API, inject token, reload into the app
+await page.evaluate(async () => {
+  const email = "maps" + Date.now() + "@test.com";
+  const c = await (
+    await fetch("/api/auth/send-code.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+  ).json();
+  const s = await (
+    await fetch("/api/auth/signup.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        full_name: "Maps",
+        phone: "",
+        role: "customer",
+        vendor_type: null,
+        password: "secret123",
+        code: c.dev_code,
+      }),
+    })
+  ).json();
+  localStorage.setItem("trvlstory_token", s.token);
+});
+await page.reload({ waitUntil: "networkidle" });
 await page.waitForSelector("svg path", { timeout: 30000 });
 await page.waitForTimeout(1500);
 
 const metrics = await page.evaluate(() => {
-  const svg = document.querySelector("main svg");
+  const svg = [...document.querySelectorAll("main svg")].sort(
+    (a, b) => b.querySelectorAll("path").length - a.querySelectorAll("path").length,
+  )[0];
   const svgRect = svg.getBoundingClientRect();
   let minTop = Infinity, maxBottom = -Infinity, minLeft = Infinity, maxRight = -Infinity;
   svg.querySelectorAll("path").forEach((p) => {
@@ -40,8 +70,25 @@ const metrics = await page.evaluate(() => {
 });
 console.log("BASELINE", JSON.stringify(metrics));
 
-// Hover lower-center area (Tamil Nadu) to summon the preview card
-await page.mouse.move(695, 510);
+// Hover a real state path (Rajasthan) to summon the preview card
+const rj = await page.evaluate(() => {
+  const svg = [...document.querySelectorAll("main svg")].sort(
+    (a, b) => b.querySelectorAll("path").length - a.querySelectorAll("path").length,
+  )[0];
+  const t = [...svg.querySelectorAll("path")]
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, fill: el.getAttribute("fill") };
+    })
+    .filter((r) => r.fill === "#f9731630" && r.w > 12)
+    .slice(0, 1)[0];
+  return t ? { x: Math.round(t.x), y: Math.round(t.y) } : null;
+});
+if (!rj) {
+  console.log("CARD {no Rajasthan path found}");
+  process.exit(1);
+}
+await page.mouse.move(rj.x, rj.y);
 await page.waitForTimeout(800);
 const card = await page.evaluate(() => {
   const els = [...document.querySelectorAll("main button")];

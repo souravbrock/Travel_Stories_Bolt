@@ -6,11 +6,22 @@ const p = await b.newPage({ viewport: { width: 1366, height: 900 } });
 const errs = [];
 p.on("pageerror", (e) => errs.push(String(e).split("\n")[0]));
 await p.goto(BASE, { waitUntil: "networkidle" });
-await p.waitForSelector("header nav button", { timeout: 15000 });
+await p.waitForFunction(
+  () => document.body.textContent.includes("Create Account"),
+  null,
+  { timeout: 15000 },
+);
 await p.waitForTimeout(1000);
 
-const hero = await p.evaluate(() => document.body.textContent.includes("Explore Incredible India"));
-console.log("public home (no gate):", hero);
+const gated = await p.evaluate(() => ({
+  auth: document.body.textContent.includes("Create Account"),
+  map: document.body.textContent.includes("Explore Incredible India"),
+}));
+console.log("gate on load (auth true, map false):", JSON.stringify(gated));
+if (!gated.auth || gated.map) {
+  console.log("GATE EXPECTATION FAILED");
+  process.exit(1);
+}
 
 const clickText = async (sel, text) => {
   await p.evaluate(
@@ -23,14 +34,12 @@ const clickText = async (sel, text) => {
   );
 };
 
-await clickText("header button", "Sign In");
-await p.waitForTimeout(500);
 await clickText("button", "Create Account");
 await p.waitForTimeout(400);
 await clickText("button", "Customer / Traveler");
 await p.waitForTimeout(400);
 await p.getByPlaceholder("Enter your full name").fill("UI Tester");
-await p.getByPlaceholder("you@example.com").fill("uitest@example.com");
+await p.getByPlaceholder("you@example.com").fill(`uitest${Date.now()}@example.com`);
 await p.getByPlaceholder("+91 98765 43210").fill("+91 9000000001");
 await clickText("button", "Continue");
 await p.waitForTimeout(400);
@@ -58,5 +67,5 @@ console.log("customer dashboard tab (expect false):", dash);
 await p.screenshot({ path: "auth-ui.png" });
 console.log("ERRORS", JSON.stringify(errs));
 await b.close();
-if (!hero || !devCode || !badge || dash || errs.length) process.exit(1);
+if (!devCode || !badge || dash || errs.length) process.exit(1);
 console.log("AUTH UI PASS");
