@@ -37,5 +37,11 @@ config/config.php
 # local preview build (regenerated via scripts/preview.sh)
 preview/
 
+# headless test screenshots (scripts/*)
+map-*.png
+auth-*.png
+roles-*.png
+nohint.png
+
 # typescript
 *.tsbuildinfo
